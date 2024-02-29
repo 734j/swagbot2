@@ -1,0 +1,14 @@
+[Unit]
+Description=Discord Bot
+After=network.target
+
+[Service]
+ExecStart=
+WorkingDirectory=
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=
+
+[Install]
+WantedBy=multi-user.target
