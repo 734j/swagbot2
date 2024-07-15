@@ -8,8 +8,20 @@ tree = app_commands.CommandTree(client)
 
 
 TOKEN = 'YOUR TOKEN HERE'
-
 bot = commands.Bot(command_prefix="(", intents=discord.Intents.all())
+
+#Channels
+channel_joinleave = 943602154428571708 # join and leave channel
+
+#Roles
+role_admin = 938787942657327114
+role_mod = 977248936148500550
+role_owner = 938732039207809025
+role_bot_smileyface = 938795313815240734
+role_bot2 = 998594848582025269
+role_pitted = 1057342828205846538
+role_member = 938804320026099742
+role_swagballer = 1003732468370776125
 
 @bot.event
 async def on_ready():
@@ -18,12 +30,12 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    channel = bot.get_channel(943602154428571708)
+    channel = bot.get_channel(channel_joinleave)
     await channel.send(f"{member.mention} ({member}) joined the server!\nhttps://tenor.com/view/snsdmongus-dog-sideye-gif-21272558")
 
 @bot.event
 async def on_member_remove(member):
-    channel = bot.get_channel(943602154428571708)
+    channel = bot.get_channel(channel_joinleave)
     await channel.send(f"{member.mention} ({member}) left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
 
 @bot.command()
@@ -39,17 +51,17 @@ async def HELP(ctx):
 @commands.has_permissions(administrator=True)
 async def pit(ctx, user: discord.Member):
     guild = ctx.guild
-    admin_r = ctx.guild.get_role(938787942657327114)
-    mod_r = ctx.guild.get_role(977248936148500550)
-    owner_r = ctx.guild.get_role(938732039207809025)
-    bot_r = ctx.guild.get_role(938795313815240734)
-    bot2_r = ctx.guild.get_role(998594848582025269)
+    admin_r = ctx.guild.get_role(role_admin)
+    mod_r = ctx.guild.get_role(role_mod)
+    owner_r = ctx.guild.get_role(role_owner)
+    bot_r = ctx.guild.get_role(role_bot_smileyface)
+    bot2_r = ctx.guild.get_role(role_bot2)
     user_roles = user.roles
     if any(role in user_roles for role in [admin_r, mod_r, owner_r, bot_r, bot2_r]):
         await ctx.send("User can not be pitted")
         pass
     else:
-        role = ctx.guild.get_role(1057342828205846538)
+        role = ctx.guild.get_role(role_pitted)
         await user.edit(roles=[role])
         await ctx.send("Pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
 
@@ -58,13 +70,13 @@ async def pit(ctx, user: discord.Member):
 @commands.has_permissions(administrator=True)
 async def unpit(ctx, user: discord.Member):
     guild = ctx.guild
-    member_r = ctx.guild.get_role(938804320026099742)
+    member_r = ctx.guild.get_role(role_member)
     user_role = user.roles
     if any(role in user_role for role in [member_r]):
         await ctx.send("This user is not in the pit. Or maybe something went terribly wrong :smile: ")
         pass
     else:
-        role = ctx.guild.get_role(938804320026099742)
+        role = ctx.guild.get_role(role_member)
         await user.edit(roles=[role])
         await ctx.send(f"{user}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
 
@@ -72,7 +84,7 @@ async def unpit(ctx, user: discord.Member):
 @commands.has_permissions(administrator=True)
 async def swagify(ctx, user: discord.Member):
     guild = ctx.guild
-    role = ctx.guild.get_role(1003732468370776125)
+    role = ctx.guild.get_role(role_swagballer)
     await user.add_roles(role)
     await ctx.send(f"{user} is now a swag baller!!!!!!!!!")
 
@@ -80,10 +92,20 @@ async def swagify(ctx, user: discord.Member):
 @commands.has_permissions(administrator=True)
 async def unswagify(ctx, user: discord.Member):
     guild = ctx.guild
-    role = ctx.guild.get_role(1003732468370776125)
+    role = ctx.guild.get_role(role_swagballer)
     await user.remove_roles(role)
     await ctx.send(f"{user} has gotten their swag priveleges revoked.")
-	
+
+@bot.command()
+async def c2k(ctx, celsius: float):
+    kelvin = celsius + 273
+    await ctx.send(f"{celsius}°C is equal to {kelvin:.2f}°K.")
+
+@bot.command()
+async def k2c(ctx, kelvin: float):
+    celsius = kelvin - 273
+    await ctx.send(f"{kelvin}°K is equal to {celsius:.2f}°C.")
+    
 @tree.command(name="length", description="Convert cm to feet and vica versa", guild=discord.Object(id=938728183203758080))	
 @app_commands.describe(value="Value of length", system="The measurement system used for the value parameter. Options: cm, in, m, ft (Case sensitive)")
 async def calculate(interaction: discord.Interaction, value: str, system: str):
