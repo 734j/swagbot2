@@ -13,7 +13,7 @@ bot = commands.Bot(command_prefix="(", intents=discord.Intents.all())
 
 @bot.event
 async def on_ready():
-	await tree.sync(guild=discord.Object(id=1184200388665147484))
+	await tree.sync(guild=discord.Object(id=938728183203758080))
 	print("The bot has successfully started.")
 
 @bot.event
