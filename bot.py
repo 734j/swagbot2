@@ -1,6 +1,10 @@
+from discord import app_commands
+from discord.utils import get # New import
 from discord.ext import commands
-from discord.utils import get
-import discord
+
+intents = discord.Intents.default()
+client = discord.Client(intents=intents)
+tree = app_commands.CommandTree(client)
 
 
 TOKEN = 'YOUR TOKEN HERE'
