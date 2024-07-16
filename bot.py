@@ -150,9 +150,9 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
             pit_role = discord.Object(id=role_pitted)  # pit role
             await user.edit(roles=[pit_role])
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
-            channel = client.get_channel(channel_pplofthepit) 
-            await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for {reason}")
+            channel = bot.get_channel(channel_pplofthepit)
             await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
+            await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for {reason}")
         elif interaction.user.guild_permissions.manage_roles and reason == "":
             pit_role = discord.Object(id=role_pitted)  # pit role
             await user.edit(roles=[pit_role])
