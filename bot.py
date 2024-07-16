@@ -152,12 +152,14 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
             channel = client.get_channel(1243174332293976095) 
             await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for {reason}")
+	    await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
         elif interaction.user.guild_permissions.manage_roles and reason == "":
             pit_role = discord.Object(id=role_pitted)  # Replace with your pit role ID
             await user.edit(roles=[pit_role])
             channel = client.get_channel(1243174332293976095)
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
-            await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for unknown reasons! :DEVIL:")
+            await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
+	    await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for unknown reasons! :DEVIL:")
         else:
             await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
     except discord.Forbidden:
