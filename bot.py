@@ -114,8 +114,8 @@ async def calc(interaction: discord.Interaction, value: str, system: str):
             embed.add_field(name="Fahrenheit", value=round(number * 1.8 + 32, 2))
         elif system == "f":
             embed.add_field(name="Input", value=value + system, inline=True)
-            embed.add_field(name="Kelvin", value=round(number + 459.67 * 5/9, 2), inline=True)
-            embed.add_field(name="Celsius", value=round(number - 32 / 1.8, 2))
+            embed.add_field(name="Kelvin", value=round((number - 32) * 5 / 9 + 273.15, 2), inline=True)
+            embed.add_field(name="Celsius", value=round((number - 32) / 1.8, 2))
             
         await interaction.response.send_message(embed=embed)
     except ValueError:
