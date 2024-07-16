@@ -51,39 +51,6 @@ async def HELP(ctx):
 
 @bot.command()
 @commands.has_permissions(administrator=True)
-async def pit(ctx, user: discord.Member):
-    guild = ctx.guild
-    admin_r = ctx.guild.get_role(role_admin)
-    mod_r = ctx.guild.get_role(role_mod)
-    owner_r = ctx.guild.get_role(role_owner)
-    bot_r = ctx.guild.get_role(role_bot_smileyface)
-    bot2_r = ctx.guild.get_role(role_bot2)
-    user_roles = user.roles
-    if any(role in user_roles for role in [admin_r, mod_r, owner_r, bot_r, bot2_r]):
-        await ctx.send("User can not be pitted")
-        pass
-    else:
-        role = ctx.guild.get_role(role_pitted)
-        await user.edit(roles=[role])
-        await ctx.send("Pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
-
-    
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def unpit(ctx, user: discord.Member):
-    guild = ctx.guild
-    member_r = ctx.guild.get_role(role_member)
-    user_role = user.roles
-    if any(role in user_role for role in [member_r]):
-        await ctx.send("This user is not in the pit. Or maybe something went terribly wrong :smile: ")
-        pass
-    else:
-        role = ctx.guild.get_role(role_member)
-        await user.edit(roles=[role])
-        await ctx.send(f"{user}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
-
-@bot.command()
-@commands.has_permissions(administrator=True)
 async def swagify(ctx, user: discord.Member):
     guild = ctx.guild
     role = ctx.guild.get_role(role_swagballer)
@@ -152,5 +119,95 @@ async def calc(interaction: discord.Interaction, value: str, system: str):
         await interaction.response.send_message(embed=embed)
     except ValueError:
         await interaction.response.send_message("Invalid input")
+
+        
+# PITTING SYSTEM
+@tree.command(
+    name="pit",
+    description="pits someone",
+    guild=discord.Object(id=server_id)
+)
+@app_commands.describe(reason="Reason will be posted in the public logging channel.")
+async def pit(interaction: discord.Interaction, user: discord.Member, reason: str = ""):
+    if not interaction.user.guild_permissions.manage_roles:
+        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+        return
+
+    if user.guild_permissions.manage_roles:
+        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+        return
+    bot_member = interaction.guild.get_member(client.user.id)
+    bot_top_role = bot_member.top_role
+    user_top_role = user.top_role
+
+    if bot_top_role <= user_top_role:
+        await interaction.response.send_message("I do not have permission to modify roles for this user.", ephemeral=True)
+        return
+
+    try:
+        # channel - log channel id
+        if interaction.user.guild_permissions.manage_roles and reason != "":
+            pit_role = discord.Object(id=role_pitted)  # Replace with your pit role ID
+            await user.edit(roles=[pit_role])
+            await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
+            channel = client.get_channel(1243174332293976095) 
+            await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for {reason}")
+        elif interaction.user.guild_permissions.manage_roles and reason == "":
+            pit_role = discord.Object(id=role_pitted)  # Replace with your pit role ID
+            await user.edit(roles=[pit_role])
+            channel = client.get_channel(1243174332293976095)
+            await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
+            await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for unknown reasons! :DEVIL:")
+        else:
+            await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+    except discord.Forbidden:
+            await interaction.response.send_message("403. I need to be higher in the role hiearchy.", ephemeral=True)
+    except Exception as e:
+            await interaction.response.send_message(f"An unexpected error occurred: {str(e)}", ephemeral=True)
+
+@tree.command(
+    name="unpit",
+    description="unpits someone",
+    guild=discord.Object(id=server_id)
+)
+
+@app_commands.describe(reason="Reason will be posted in the public logging channel.")
+async def unpit(interaction: discord.Interaction, user: discord.Member, reason: str = ""):
+    if not interaction.user.guild_permissions.manage_roles:
+        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+        return
+
+    if user.guild_permissions.manage_roles:
+        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+        return
+    bot_member = interaction.guild.get_member(client.user.id)
+    bot_top_role = bot_member.top_role
+    user_top_role = user.top_role
+
+    if bot_top_role <= user_top_role:
+        await interaction.response.send_message("I do not have permission to modify roles for this user.", ephemeral=True)
+        return
+
+    try:
+        # channel - log channel id
+        if interaction.user.guild_permissions.manage_roles and reason != "":
+            greenrole = discord.Object(id=role_member)  # Replace with greenie
+            await user.edit(roles=[greenrole])
+            await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
+            channel = client.get_channel(1243174332293976095) 
+            await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for {reason}")
+        elif interaction.user.guild_permissions.manage_roles and reason == "":
+            greenrole = discord.Object(id=role_pitted)  # Replace with your pit role ID
+            await user.edit(roles=[greenrole])
+            channel = client.get_channel(1243174332293976095)
+            await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
+            await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for unknown reasons! :evil:")
+        else:
+            await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+    except discord.Forbidden:
+            await interaction.response.send_message("403. I need to be higher in the role hiearchy.", ephemeral=True)
+    except Exception as e:
+            await interaction.response.send_message(f"An unexpected error occurred: {str(e)}", ephemeral=True)
+        
 
 bot.run(TOKEN)
