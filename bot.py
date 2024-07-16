@@ -14,6 +14,7 @@ server_id = 938728183203758080
 
 #Channels
 channel_joinleave = 943602154428571708 # join and leave channel
+channel_pplofthepit = 1243174332293976095
 
 #Roles
 role_admin = 938787942657327114
@@ -119,7 +120,6 @@ async def calc(interaction: discord.Interaction, value: str, system: str):
         await interaction.response.send_message(embed=embed)
     except ValueError:
         await interaction.response.send_message("Invalid input")
-
         
 # PITTING SYSTEM
 @tree.command(
@@ -136,7 +136,7 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
     if user.guild_permissions.manage_roles:
         await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
         return
-    bot_member = interaction.guild.get_member(client.user.id)
+    bot_member = interaction.guild.get_member(bot.user.id)
     bot_top_role = bot_member.top_role
     user_top_role = user.top_role
 
@@ -145,18 +145,18 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
         return
 
     try:
-        # channel - log channel id
+        #
         if interaction.user.guild_permissions.manage_roles and reason != "":
-            pit_role = discord.Object(id=role_pitted)  # Replace with your pit role ID
+            pit_role = discord.Object(id=role_pitted)  # pit role
             await user.edit(roles=[pit_role])
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
-            channel = client.get_channel(1243174332293976095) 
+            channel = client.get_channel(channel_pplofthepit) 
             await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for {reason}")
-	    await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
+	          await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
         elif interaction.user.guild_permissions.manage_roles and reason == "":
-            pit_role = discord.Object(id=role_pitted)  # Replace with your pit role ID
+            pit_role = discord.Object(id=role_pitted)  # pit role
             await user.edit(roles=[pit_role])
-            channel = client.get_channel(1243174332293976095)
+            channel = bot.get_channel(channel_pplofthepit)
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
             await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
 	    await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for unknown reasons! :DEVIL:")
@@ -182,7 +182,7 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
     if user.guild_permissions.manage_roles:
         await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
         return
-    bot_member = interaction.guild.get_member(client.user.id)
+    bot_member = interaction.guild.get_member(bot.user.id)
     bot_top_role = bot_member.top_role
     user_top_role = user.top_role
 
@@ -191,17 +191,17 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
         return
 
     try:
-        # channel - log channel id
+        # 
         if interaction.user.guild_permissions.manage_roles and reason != "":
-            greenrole = discord.Object(id=role_member)  # Replace with greenie
+            greenrole = discord.Object(id=role_member)
             await user.edit(roles=[greenrole])
             await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
-            channel = client.get_channel(1243174332293976095) 
-            await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for {reason}")
+            channel = bot.get_channel(channel_pplofthepit) 
+            await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for reason: {reason}")
         elif interaction.user.guild_permissions.manage_roles and reason == "":
-            greenrole = discord.Object(id=role_pitted)  # Replace with your pit role ID
+            greenrole = discord.Object(id=role_member)
             await user.edit(roles=[greenrole])
-            channel = client.get_channel(1243174332293976095)
+            channel = bot.get_channel(channel_pplofthepit)
             await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
             await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for unknown reasons! :evil:")
         else:
