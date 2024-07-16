@@ -1,14 +1,16 @@
 from discord import app_commands
 from discord.utils import get # New import
 from discord.ext import commands
+import discord
 
-intents = discord.Intents.default()
-client = discord.Client(intents=intents)
-tree = app_commands.CommandTree(client)
-
-
+intents = discord.Intents.all()
+intents.members = True
 TOKEN = 'YOUR TOKEN HERE'
-bot = commands.Bot(command_prefix="(", intents=discord.Intents.all())
+bot = commands.Bot(command_prefix="(", intents=intents)
+tree = bot.tree
+
+#Guild ID
+server_id = 938728183203758080
 
 #Channels
 channel_joinleave = 943602154428571708 # join and leave channel
@@ -25,7 +27,7 @@ role_swagballer = 1003732468370776125
 
 @bot.event
 async def on_ready():
-	await tree.sync(guild=discord.Object(id=938728183203758080))
+	await tree.sync(guild=discord.Object(id=server_id))
 	print("The bot has successfully started.")
 
 @bot.event
@@ -106,7 +108,7 @@ async def k2c(ctx, kelvin: float):
     celsius = kelvin - 273
     await ctx.send(f"{kelvin}°K is equal to {celsius:.2f}°C.")
     
-@tree.command(name="length", description="Convert cm to feet and vica versa", guild=discord.Object(id=938728183203758080))	
+@tree.command(name="length", description="Convert cm to feet and vica versa", guild=discord.Object(id=server_id))	
 @app_commands.describe(value="Value of length", system="The measurement system used for the value parameter. Options: cm, in, m, ft (Case sensitive)")
 async def calculate(interaction: discord.Interaction, value: str, system: str):
     try:
@@ -126,9 +128,9 @@ async def calculate(interaction: discord.Interaction, value: str, system: str):
 @tree.command(
     name="temperature",
     description="Convert kelvin, fahrenheit and celsius.",
-    guild=discord.Object(id=938728183203758080)
+    guild=discord.Object(id=server_id)
 )
-@app_commands.describe(value="Value", system="The system that you inputted the value in. Options: k, c, v. (Case sensitive)")
+@app_commands.describe(value="Value", system="The system that you inputted the value in. Options: k, c, f. (Case sensitive)")
 async def calc(interaction: discord.Interaction, value: str, system: str):
     try:
         number = float(value)
@@ -150,11 +152,5 @@ async def calc(interaction: discord.Interaction, value: str, system: str):
         await interaction.response.send_message(embed=embed)
     except ValueError:
         await interaction.response.send_message("Invalid input")
-
-
-        
-# What the fuck am I pasting in
-# Am I emerging the Yggdrasil or something
-
 
 bot.run(TOKEN)
