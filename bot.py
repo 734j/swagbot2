@@ -65,31 +65,37 @@ async def unswagify(ctx, user: discord.Member):
     role = ctx.guild.get_role(role_swagballer)
     await user.remove_roles(role)
     await ctx.send(f"{user} has gotten their swag priveleges revoked.")
-
-@bot.command()
-async def c2k(ctx, celsius: float):
-    kelvin = celsius + 273.15
-    await ctx.send(f"{celsius}°C is equal to {kelvin:.2f}°K.")
-
-@bot.command()
-async def k2c(ctx, kelvin: float):
-    celsius = kelvin - 273.15
-    await ctx.send(f"{kelvin}°K is equal to {celsius:.2f}°C.")
     
 @tree.command(name="length", description="Convert cm to feet and vica versa", guild=discord.Object(id=server_id))	
 @app_commands.describe(value="Value of length", system="The measurement system used for the value parameter. Options: cm, in, m, ft (Case sensitive)")
 async def calculate(interaction: discord.Interaction, value: str, system: str):
     try:
         number = float(value)
+        embed = discord.Embed(title="Calculation Result", color=discord.Color.yellow())
+
         if system == 'cm':
-            await interaction.response.send_message(f"{number:.3f}cm equals; \n- {number / 100:.3f} meters\n- {number / 2.54:.3f} inches\n- {number /30.48:.3f} feet")
+            embed.add_field(name="Input", value=value + system, inline=True)
+            embed.add_field(name="Inches", value=round(number * 0.03937, 2), inline=True)
+            embed.add_field(name="Meters", value=round(number / 100, 2), inline=True)
+            embed.add_field(name="Feet", value=round(number * 0.0328, 2), inline=True)
         elif system == 'in':
-            await interaction.response.send_message(f"{number:.3f}in equals; \n- {number * 0.0254:.3f} meters\n- {number * 2.54:.3f} centimeters\n- {number / 12:.3f} feet")
+            embed.add_field(name="Input", value=value + system, inline=True)
+            embed.add_field(name="Feet", value=round(number / 12, 2), inline=True)
+            embed.add_field(name="Meters", value=round(number * 0.0254, 2), inline=True)
+            embed.add_field(name="Centimeters", value=round(number * 2.54, 2), inline=True)
         elif system == 'm':
-            await interaction.response.send_message(f"{number:.3f}m equals; \n- {number * 100:.3f} centimeters\n- {number / 0.0254:.3f} inches\n- {number * 3.280839895:.3f} feet")
+            embed.add_field(name="Input", value=value + system, inline=True)
+            embed.add_field(name="Inches", value=round(number / 0.0254, 2), inline=True)
+            embed.add_field(name="Centimeters", value=round(number * 100, 2), inline=True)
+            embed.add_field(name="Feet", value=round(number * 3.280839895, 2), inline=True)
         elif system == 'ft':
+            embed.add_field(name="Input", value=value + system, inline=True)
+            embed.add_field(name="Inches", value=round(number * 12, 2), inline=True)
+            embed.add_field(name="Centimeters", value=round(number * 30.48, 2), inline=True)
+            embed.add_field(name="Meters", value=round(number * 0.3048 2), inline=True)
             await interaction.response.send_message(f"{number:.3f}ft equals; \n- {number * 30.48:.3f} centimeters\n- {number * 12:.3f} inches\n- {number * 0.3048:.3f} meters") 
         # https://preview.redd.it/zh4z7cem9kg51.png?auto=webp&s=90ff37f3925e3d8dfe41a88aafcf8f35a414d5b7
+        await interaction.response.send_message(embed=embed)
     except ValueError:
         await interaction.response.send_message("Invalid input! Please provide a valid number.")
 
