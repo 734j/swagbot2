@@ -5,12 +5,12 @@ import discord
 
 intents = discord.Intents.all()
 intents.members = True
-TOKEN = 'YOUR TOKEN HERE'
+TOKEN = 'TOKEN'
 bot = commands.Bot(command_prefix="(", intents=intents)
 tree = bot.tree
 
 #Guild ID
-server_id = 938728183203758080
+server_id = 1184200388665147484
 
 #Channels
 channel_joinleave = 943602154428571708 # join and leave channel
@@ -81,17 +81,34 @@ async def k2c(ctx, kelvin: float):
 async def calculate(interaction: discord.Interaction, value: str, system: str):
     try:
         number = float(value)
+        embed = discord.Embed(title="Calculation Result", color=discord.Color.yellow())
+
         if system == 'cm':
-            await interaction.response.send_message(f"{number:.3f}cm equals; \n- {number / 100:.3f} meters\n- {number / 2.54:.3f} inches\n- {number /30.48:.3f} feet")
+            embed.add_field(name="Input", value=value + system, inline=True)
+            embed.add_field(name="Inches", value=round(number * 0.03937, 2), inline=True)
+            embed.add_field(name="Meters", value=round(number / 100, 2), inline=True)
+            embed.add_field(name="Feet", value=round(number * 0.0328, 2), inline=True)
         elif system == 'in':
-            await interaction.response.send_message(f"{number:.3f}in equals; \n- {number * 0.0254:.3f} meters\n- {number * 2.54:.3f} centimeters\n- {number / 12:.3f} feet")
+            embed.add_field(name="Input", value=value + system, inline=True)
+            embed.add_field(name="Feet", value=round(number / 12, 2), inline=True)
+            embed.add_field(name="Meters", value=round(number * 0.0254, 2), inline=True)
+            embed.add_field(name="Centimeters", value=round(number * 2.54, 2), inline=True)
         elif system == 'm':
-            await interaction.response.send_message(f"{number:.3f}m equals; \n- {number * 100:.3f} centimeters\n- {number / 0.0254:.3f} inches\n- {number * 3.280839895:.3f} feet")
+            embed.add_field(name="Input", value=value + system, inline=True)
+            embed.add_field(name="Inches", value=round(number / 0.0254, 2), inline=True)
+            embed.add_field(name="Centimeters", value=round(number * 100, 2), inline=True)
+            embed.add_field(name="Feet", value=round(number * 3.280839895, 2), inline=True)
         elif system == 'ft':
+            embed.add_field(name="Input", value=value + system, inline=True)
+            embed.add_field(name="Inches", value=round(number * 12, 2), inline=True)
+            embed.add_field(name="Centimeters", value=round(number * 30.48, 2), inline=True)
+            embed.add_field(name="Meters", value=round(number * 0.3048 2), inline=True)
             await interaction.response.send_message(f"{number:.3f}ft equals; \n- {number * 30.48:.3f} centimeters\n- {number * 12:.3f} inches\n- {number * 0.3048:.3f} meters") 
         # https://preview.redd.it/zh4z7cem9kg51.png?auto=webp&s=90ff37f3925e3d8dfe41a88aafcf8f35a414d5b7
+        await interaction.response.send_message(embed=embed)
     except ValueError:
         await interaction.response.send_message("Invalid input! Please provide a valid number.")
+        
 
 @tree.command(
     name="temperature",
