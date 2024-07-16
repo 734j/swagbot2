@@ -68,12 +68,12 @@ async def unswagify(ctx, user: discord.Member):
 
 @bot.command()
 async def c2k(ctx, celsius: float):
-    kelvin = celsius + 273
+    kelvin = celsius + 273.15
     await ctx.send(f"{celsius}°C is equal to {kelvin:.2f}°K.")
 
 @bot.command()
 async def k2c(ctx, kelvin: float):
-    celsius = kelvin - 273
+    celsius = kelvin - 273.15
     await ctx.send(f"{kelvin}°K is equal to {celsius:.2f}°C.")
     
 @tree.command(name="length", description="Convert cm to feet and vica versa", guild=discord.Object(id=server_id))	
