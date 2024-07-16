@@ -114,13 +114,13 @@ async def calculate(interaction: discord.Interaction, value: str, system: str):
     try:
         number = float(value)
         if system == 'cm':
-            await interaction.response.send_message(f"{number}cm equals; \n- {number / 100} meters\n- {number / 2.54} inches\n- {number /30.48} feet")
+            await interaction.response.send_message(f"{number:.3f}cm equals; \n- {number / 100:.3f} meters\n- {number / 2.54:.3f} inches\n- {number /30.48:.3f} feet")
         elif system == 'in':
-            await interaction.response.send_message(f"{number}in equals; \n- {number * 0.0254} meters\n- {number * 2.54} centimeters\n- {number / 12} feet")
+            await interaction.response.send_message(f"{number:.3f}in equals; \n- {number * 0.0254:.3f} meters\n- {number * 2.54:.3f} centimeters\n- {number / 12:.3f} feet")
         elif system == 'm':
-            await interaction.response.send_message(f"{number}m equals; \n- {number * 100} centimeters\n- {number / 0.0254} inches\n- {number * 3.280839895} feet")
+            await interaction.response.send_message(f"{number:.3f}m equals; \n- {number * 100:.3f} centimeters\n- {number / 0.0254:.3f} inches\n- {number * 3.280839895:.3f} feet")
         elif system == 'ft':
-            await interaction.response.send_message(f"{number}ft equals; \n- {number * 30.48} centimeters\n- {number * 12} inches\n- {number * 0.3048} meters") 
+            await interaction.response.send_message(f"{number:.3f}ft equals; \n- {number * 30.48:.3f} centimeters\n- {number * 12:.3f} inches\n- {number * 0.3048:.3f} meters") 
         # https://preview.redd.it/zh4z7cem9kg51.png?auto=webp&s=90ff37f3925e3d8dfe41a88aafcf8f35a414d5b7
     except ValueError:
         await interaction.response.send_message("Invalid input! Please provide a valid number.")
