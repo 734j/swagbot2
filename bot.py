@@ -136,22 +136,6 @@ async def unswag(interaction: discord.Interaction, user: discord.Member):
 async def ver(interaction: discord.Interction)
     await interaction.response.send_message(f"Version: {COMMIT}")
 
-@tree.command(
-name='hello',
-description='haii',
-guild=discord.Object(id=server_id)
-)
-async def hello (interaction: discord.Interaction):
-		await interaction.response.send_message("Hiiiii haiii haiiii :3")
-		
-@tree.command(
-name='bye',
-description='baii',
-guild=discord.Object(id=server_id)
-)
-async def bye (interaction: discord.Interaction):
-		await interaction.response.send_message("baii... :(")
-
 @tree.command(name="length", description="Convert cm to feet and vica versa", guild=discord.Object(id=server_id))	
 @app_commands.describe(value="Value of length", system="The measurement system used for the value parameter. Options: cm, in, m, ft (Case sensitive)")
 async def calculate(interaction: discord.Interaction, value: str, system: str):
