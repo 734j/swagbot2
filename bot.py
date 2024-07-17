@@ -47,6 +47,10 @@ async def hello(ctx):
     await ctx.send("Hiiiii haiii haiiii :3")
 
 @bot.command()
+async def goodbye(ctx):
+    await ctx.send("bye... 3:")
+
+@bot.command()
 @commands.has_permissions(administrator=True)
 async def HELP(ctx):
     await ctx.send("Prefix: '('\nUser commands:\nHELP\nhello\nAdmin commands:\npit (@user/ID)\nunpit (@user/ID)\nswagify (@user/ID)\nunswagify (@user/ID)")
@@ -55,12 +59,6 @@ async def HELP(ctx):
 @commands.has_permissions(administrator=True)
 async def version(ctx):
     await ctx.send(f"Version: {COMMIT}")
-
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def goodbye(ctx):
-    await ctx.send("bye... 3:")
-
     
 @bot.command()
 @commands.has_permissions(administrator=True)
