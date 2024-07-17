@@ -76,7 +76,8 @@ async def unswagify(ctx, user: discord.Member):
 @app_commands.describe(value="Value of length", system="The measurement system used for the value parameter. Options: cm, in, m, ft (Case sensitive)")
 async def calculate(interaction: discord.Interaction, value: str, system: str):
     try:
-        number = float(value)
+        if "'" not in value or system != "ft":
+                number = float(value)
         embed = discord.Embed(title="Calculation Result", color=discord.Color.yellow())
 
         if system == 'cm':
@@ -95,10 +96,17 @@ async def calculate(interaction: discord.Interaction, value: str, system: str):
             embed.add_field(name="Centimeters", value=round(number * 100, 2), inline=True)
             embed.add_field(name="Feet", value=round(number * 3.280839895, 2), inline=True)
         elif system == 'ft':
-            embed.add_field(name="Input", value=value + system, inline=True)
-            embed.add_field(name="Inches", value=round(number * 12, 2), inline=True)
-            embed.add_field(name="Centimeters", value=round(number * 30.48, 2), inline=True)
-            embed.add_field(name="Meters", value=round(number * 0.3048, 2), inline=True)
+                if "'" in value:
+                        value = value.split("'")
+                        embed.add_field(name="Input", value=(value[0] + "'" + value[1] + '"'), inline=True)
+                        embed.add_field(name="Inches", value=round(int(value[0]) * 12 + float(value[1]), 2), inline=True)
+                        embed.add_field(name="Centimeters", value=round((int(value[0]) * 12 + float(value[1])) * 2.54, 2), inline=True)
+                        embed.add_field(name="Meters", value=round((int(value[0]) * 12 + float(value[1])) * 0.0254, 2), inline=True)
+                else:
+                        embed.add_field(name="Input", value=value + system, inline=True)
+                        embed.add_field(name="Inches", value=round(number * 12, 2), inline=True)
+                        embed.add_field(name="Centimeters", value=round(number * 30.48, 2), inline=True)
+                        embed.add_field(name="Meters", value=round(number * 0.3048, 2), inline=True)
         # https://preview.redd.it/zh4z7cem9kg51.png?auto=webp&s=90ff37f3925e3d8dfe41a88aafcf8f35a414d5b7
         await interaction.response.send_message(embed=embed)
     except ValueError:
