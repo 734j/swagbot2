@@ -23,5 +23,6 @@ install:
 	sed -i.bak "s/YOUR TOKEN HERE/$${TOKEN}/g" $(INSTALL_DIRECTORY)/$(SRCS)
 	@COMMIT_HASH=$(shell git rev-parse HEAD) && \
 	sed -i.bak "s/TESTING_VERSION/$${COMMIT_HASH}/g" $(INSTALL_DIRECTORY)/$(SRCS)
+
 release:
 	echo
