@@ -5,6 +5,7 @@ import discord
 
 intents = discord.Intents.all()
 intents.members = True
+COMMIT = 'TESTING_VERSION'
 TOKEN = 'YOUR TOKEN HERE'
 bot = commands.Bot(command_prefix="(", intents=intents)
 tree = bot.tree
@@ -49,6 +50,11 @@ async def hello(ctx):
 @commands.has_permissions(administrator=True)
 async def HELP(ctx):
     await ctx.send("Prefix: '('\nUser commands:\nHELP\nhello\nAdmin commands:\npit (@user/ID)\nunpit (@user/ID)\nswagify (@user/ID)\nunswagify (@user/ID)")
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def version(ctx):
+    await ctx.send(f"Version: {COMMIT}")
 
 @bot.command()
 @commands.has_permissions(administrator=True)
