@@ -141,7 +141,7 @@ async def calc(interaction: discord.Interaction, value: str, system: str):
 @app_commands.describe(reason="Reason will be posted in the public logging channel.")
 async def pit(interaction: discord.Interaction, user: discord.Member, reason: str = ""):
     if not interaction.user.guild_permissions.manage_roles:
-        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.")
         return
 
     if user.guild_permissions.manage_roles:
@@ -187,7 +187,7 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
 @app_commands.describe(reason="Reason will be posted in the public logging channel.")
 async def unpit(interaction: discord.Interaction, user: discord.Member, reason: str = ""):
     if not interaction.user.guild_permissions.manage_roles:
-        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.")
         return
 
     if user.guild_permissions.manage_roles:
