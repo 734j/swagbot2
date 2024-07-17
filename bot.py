@@ -75,7 +75,7 @@ async def calculate(interaction: discord.Interaction, value: str, system: str):
 
         if system == 'cm':
             embed.add_field(name="Input", value=value + system, inline=True)
-            embed.add_field(name="Inches", value=round(number * 0.03937, 2), inline=True)
+            embed.add_field(name="Inches", value=round(number * 0.3937, 2), inline=True)
             embed.add_field(name="Meters", value=round(number / 100, 2), inline=True)
             embed.add_field(name="Feet", value=round(number * 0.0328, 2), inline=True)
         elif system == 'in':
