@@ -77,7 +77,7 @@ async def calculate(interaction: discord.Interaction, value: str, system: str):
             embed.add_field(name="Input", value=value + system, inline=True)
             embed.add_field(name="Inches", value=round(number * 0.3937, 2), inline=True)
             embed.add_field(name="Meters", value=round(number / 100, 2), inline=True)
-            embed.add_field(name="Feet", value=round(number * 0.0328, 2), inline=True)
+            embed.add_field(name="Feet", value=(str(int((number/2.54)//12))) + "'" + str(round((number/2.54)%12, 2)) + "\"", inline=True)
         elif system == 'in':
             embed.add_field(name="Input", value=value + system, inline=True)
             embed.add_field(name="Feet", value=round(number / 12, 2), inline=True)
@@ -93,7 +93,6 @@ async def calculate(interaction: discord.Interaction, value: str, system: str):
             embed.add_field(name="Inches", value=round(number * 12, 2), inline=True)
             embed.add_field(name="Centimeters", value=round(number * 30.48, 2), inline=True)
             embed.add_field(name="Meters", value=round(number * 0.3048, 2), inline=True)
-            await interaction.response.send_message(f"{number:.3f}ft equals; \n- {number * 30.48:.3f} centimeters\n- {number * 12:.3f} inches\n- {number * 0.3048:.3f} meters") 
         # https://preview.redd.it/zh4z7cem9kg51.png?auto=webp&s=90ff37f3925e3d8dfe41a88aafcf8f35a414d5b7
         await interaction.response.send_message(embed=embed)
     except ValueError:
