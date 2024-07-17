@@ -228,15 +228,14 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
         return
 
     try:
-        #
+        pit = bot.get_channel(channel_pit)
         if interaction.user.guild_permissions.manage_roles and reason != "":
             pit_role = discord.Object(id=role_pitted)  # pit role
             await user.edit(roles=[pit_role])
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
             channel = bot.get_channel(channel_pplofthepit)
             await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
-            await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for {reason}")
-	    pit = bot.get_channel(channel_pit)
+            await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for {reason}.")
             await pit.send (f"A loud thud shakes the depths of the Pit as {user.mention} ({user}) falls to the ground... Welcome your new friend.")
         elif interaction.user.guild_permissions.manage_roles and reason == "":
             pit_role = discord.Object(id=role_pitted)  # pit role
@@ -245,7 +244,6 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
             await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
             await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for unknown reasons! :DEVIL:")
-	    pit = bot.get_channel(channel_pit)
             await pit.send (f"A loud thud shakes the depths of the Pit as {user.mention} ({user}) falls to the ground... Welcome your new friend.")
         else:
             await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
