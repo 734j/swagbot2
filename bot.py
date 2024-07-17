@@ -333,7 +333,7 @@ async def roulette(interaction: discord.Interaction, pit: str = ""):
 		elif pit == "YUP!" and interaction.user.guild_permissions.manage_roles:
 			randoms = random.choice(guild.members)
 			pitted = discord.Object(id=role_pitted) # What the fuck am I doing I swear to god/Oh i think i got it lemme try
-			await interaction.response.send_message(f"{randoms.mention} has been drawn for the random pitting! Co gratulations!")
+			await interaction.response.send_message(f"{randoms.mention} has been drawn for the random pitting! Congratulations!")
 			await randoms.edit(roles=[pitted])
 			await randoms.send("You have been by random chosen to be pitted in 69SwagBalls420 Cord! You can be unpitted upon request.")
 			await channel_pplofthepit.send(f"{randoms.mention} was pitted by {interaction.user.mention} in the result of a pit roulette. Epic fail!")
