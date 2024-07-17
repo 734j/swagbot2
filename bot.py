@@ -133,7 +133,7 @@ async def unswag(interaction: discord.Interaction, user: discord.Member):
 	description="bot version",
         guild=discord.Object(id=server_id)
 )
-async def ver(interaction: discord.Interction)
+async def ver(interaction: discord.Interaction):
     await interaction.response.send_message(f"Version: {COMMIT}")
 
 @tree.command(name="length", description="Convert cm to feet and vica versa", guild=discord.Object(id=server_id))	
