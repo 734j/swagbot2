@@ -58,6 +58,12 @@ async def version(ctx):
 
 @bot.command()
 @commands.has_permissions(administrator=True)
+async def goodbye(ctx):
+    await ctx.send("bye... 3:")
+
+    
+@bot.command()
+@commands.has_permissions(administrator=True)
 async def swagify(ctx, user: discord.Member):
     guild = ctx.guild
     role = ctx.guild.get_role(role_swagballer)
