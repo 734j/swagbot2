@@ -42,40 +42,120 @@ async def on_member_remove(member):
     channel = bot.get_channel(channel_joinleave)
     await channel.send(f"{member.mention} ({member}) left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
 
-@bot.command()
-async def hello(ctx):
-    await ctx.send("Hiiiii haiii haiiii :3")
+@tree.command(
+name='hello',
+description='haii',
+guild=discord.Object(id=server_id)
+)
+async def hello (interaction: discord.Interaction):
+		await interaction.response.send_message("Hiiiii haiii haiiii :3")
+		
+@tree.command(
+name='bye',
+description='baii',
+guild=discord.Object(id=server_id)
+)
+async def bye (interaction: discord.Interaction):
+		await interaction.response.send_message("baii... :(")
+    
+# SWAGIFICATION
 
-@bot.command()
-async def goodbye(ctx):
-    await ctx.send("bye... 3:")
+@tree.command(
+    name="swagify",
+    description="swagifies a user",
+    guild=discord.Object(id=server_id)
+)
+async def swag(interaction: discord.Interaction, user: discord.Member):
+    if not interaction.user.guild_permissions.manage_roles:
+        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.")
+        return
 
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def HELP(ctx):
-    await ctx.send("Prefix: '('\nUser commands:\nHELP\nhello\nAdmin commands:\npit (@user/ID)\nunpit (@user/ID)\nswagify (@user/ID)\nunswagify (@user/ID)")
+    if user.guild_permissions.manage_roles:
+        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+        return
+    bot_member = interaction.guild.get_member(bot.user.id)
+    bot_top_role = bot_member.top_role
+    user_top_role = user.top_role
+
+    if bot_top_role <= user_top_role:
+        await interaction.response.send_message("I do not have permission to modify roles for this user.", ephemeral=True)
+        return
+
+    try:
+        if interaction.user.guild_permissions.manage_roles:
+            ylwrole = discord.Object(id=role_swagballer)
+            await user.add_roles(ylwrole)
+            await interaction.response.send_message(f"{user.mention} is now a swagballer!!!!!!!!!!!!!!!")
+        else:
+            await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+    except discord.Forbidden:
+            await interaction.response.send_message("403. I need to be higher in the role hiearchy.", ephemeral=True)
+    except Exception as e:
+            await interaction.response.send_message(f"An unexpected error occurred: {str(e)}", ephemeral=True)
+    
+@tree.command(
+    name="unswagify",
+    description="unswagifies a user",
+    guild=discord.Object(id=server_id)
+)
+async def unswag(interaction: discord.Interaction, user: discord.Member):
+    if not interaction.user.guild_permissions.manage_roles:
+        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.")
+        return
+
+    if user.guild_permissions.manage_roles:
+        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+        return
+    bot_member = interaction.guild.get_member(bot.user.id)
+    bot_top_role = bot_member.top_role
+    user_top_role = user.top_role
+
+    if bot_top_role <= user_top_role:
+        await interaction.response.send_message("I do not have permission to modify roles for this user.", ephemeral=True)
+        return
+
+    try:
+        if interaction.user.guild_permissions.manage_roles:
+            ylwrole = discord.Object(id=role_swagballer)
+            await user.remove_roles(ylwrole)
+            await interaction.response.send_message(f"{user.mention} had their swag privilleges revoked.")
+        else:
+            await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+    except discord.Forbidden:
+            await interaction.response.send_message("403. I need to be higher in the role hiearchy.", ephemeral=True)
+    except Exception as e:
+            await interaction.response.send_message(f"An unexpected error occurred: {str(e)}", ephemeral=True)
+
+@tree.command(
+	name="version",
+	description="bot version",
+        guild=discord.Object(id=server_id)
+)
+async def ver(interaction: discord.Interction)
+    await interaction.response.send_message(f"Version: {COMMIT}")
+
+@tree.command(
+name='hello',
+description='haii',
+guild=discord.Object(id=server_id)
+)
+async def hello (interaction: discord.Interaction):
+		await interaction.response.send_message("Hiiiii haiii haiiii :3")
+		
+@tree.command(
+name='bye',
+description='baii',
+guild=discord.Object(id=server_id)
+)
+async def bye (interaction: discord.Interaction):
+		await interaction.response.send_message("baii... :(")
+
 
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def version(ctx):
     await ctx.send(f"Version: {COMMIT}")
-    
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def swagify(ctx, user: discord.Member):
-    guild = ctx.guild
-    role = ctx.guild.get_role(role_swagballer)
-    await user.add_roles(role)
-    await ctx.send(f"{user} is now a swag baller!!!!!!!!!")
 
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def unswagify(ctx, user: discord.Member):
-    guild = ctx.guild
-    role = ctx.guild.get_role(role_swagballer)
-    await user.remove_roles(role)
-    await ctx.send(f"{user} has gotten their swag priveleges revoked.")
-    
 @tree.command(name="length", description="Convert cm to feet and vica versa", guild=discord.Object(id=server_id))	
 @app_commands.describe(value="Value of length", system="The measurement system used for the value parameter. Options: cm, in, m, ft (Case sensitive)")
 async def calculate(interaction: discord.Interaction, value: str, system: str):
