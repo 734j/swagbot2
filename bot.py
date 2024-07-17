@@ -92,7 +92,7 @@ async def calculate(interaction: discord.Interaction, value: str, system: str):
             embed.add_field(name="Input", value=value + system, inline=True)
             embed.add_field(name="Inches", value=round(number * 12, 2), inline=True)
             embed.add_field(name="Centimeters", value=round(number * 30.48, 2), inline=True)
-            embed.add_field(name="Meters", value=round(number * 0.3048 2), inline=True)
+            embed.add_field(name="Meters", value=round(number * 0.3048, 2), inline=True)
             await interaction.response.send_message(f"{number:.3f}ft equals; \n- {number * 30.48:.3f} centimeters\n- {number * 12:.3f} inches\n- {number * 0.3048:.3f} meters") 
         # https://preview.redd.it/zh4z7cem9kg51.png?auto=webp&s=90ff37f3925e3d8dfe41a88aafcf8f35a414d5b7
         await interaction.response.send_message(embed=embed)
