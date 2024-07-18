@@ -208,6 +208,20 @@ async def calc(interaction: discord.Interaction, value: str, system: str):
         await interaction.response.send_message("Invalid input")
         
 # PITTING SYSTEM
+async def generic_pit(user): # Use this when pitting someone in another function. Does not include reason.
+        user_id = str(user.id) # gets user id
+        user_roles_ids = user.roles # gets list of roles user has
+        list_len = len(user_roles_ids) 
+        file = open(f"{SYS_PIT_DIR_PATH}/{user_id}", "w") 
+        iterate = 0
+        while iterate < list_len:
+                file.write(str(user_roles_ids[iterate].id)+"\n") # write each role ID in to file
+                iterate = iterate + 1
+                
+        file.close()
+        pit_role = discord.Object(id=role_pitted)  # pit role
+        await user.edit(roles=[pit_role])
+
 @tree.command(
     name="pit",
     description="pits someone",
@@ -233,36 +247,14 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
     try:
         pit = bot.get_channel(channel_pit)
         if interaction.user.guild_permissions.manage_roles and reason != "":
-            user_id = str(user.id) # gets user id
-            user_roles_ids = user.roles # gets list of roles user has
-            list_len = len(user_roles_ids) 
-            file = open(f"{SYS_PIT_DIR_PATH}/{user_id}", "w") 
-            iterate = 0
-            while iterate < list_len:
-                    file.write(str(user_roles_ids[iterate].id)+"\n") # write each role ID in to file
-                    iterate = iterate + 1
-                    
-            file.close()
-            pit_role = discord.Object(id=role_pitted)  # pit role
-            await user.edit(roles=[pit_role])
+            await generic_pit(user)
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
             channel = bot.get_channel(channel_pplofthepit)
             await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
             await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for {reason}.")
             await pit.send (f"A loud thud shakes the depths of the Pit as {user.mention} ({user}) falls to the ground... Welcome your new friend.")
         elif interaction.user.guild_permissions.manage_roles and reason == "":
-            user_id = str(user.id)
-            user_roles_ids = user.roles
-            list_len = len(user_roles_ids)
-            file = open(f"{SYS_PIT_DIR_PATH}/{user_id}", "w")
-            iterate = 0
-            while iterate < list_len:
-                    file.write(str(user_roles_ids[iterate].id)+"\n")
-                    iterate = iterate + 1
-                    
-            file.close()
-            pit_role = discord.Object(id=role_pitted)  # pit role
-            await user.edit(roles=[pit_role])
+            await generic_pit(user)
             channel = bot.get_channel(channel_pplofthepit)
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
             await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
