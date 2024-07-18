@@ -267,6 +267,31 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
     except Exception as e:
             await interaction.response.send_message(f"An unexpected error occurred: {str(e)}", ephemeral=True)
 
+async def generic_unpit(user):
+        user_id = str(user.id)
+        file_list = os.listdir(f"{SYS_PIT_DIR_PATH}")
+        fl_len = len(file_list)
+        iterator = 0;
+        found = False
+        while iterator < fl_len:
+                if user_id == file_list[iterator]:
+                        found = True
+                        break;
+                iterator = iterator + 1
+            
+        if found == False:
+                await interaction.response.send_message("Could not find role ID's, applying greenrole")
+                greenrole = discord.Object(id=role_member)
+                await user.edit(roles=[greenrole])
+                return False
+
+        full_path = SYS_PIT_DIR_PATH+"/"+file_list[iterator]
+        role_ids = open(full_path, "r").read().split('\n')
+        role_ids_int = [int(role_id) for role_id in role_ids if role_id.strip().isdigit()]
+        roles_list_objects = [discord.Object(id=role_id) for role_id in role_ids_int]
+        await user.edit(roles=roles_list_objects)
+        os.remove(full_path)
+            
 @tree.command(
     name="unpit",
     description="unpits someone",
@@ -291,62 +316,22 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
         return
 
     try:
-        # 
         if interaction.user.guild_permissions.manage_roles and reason != "":
-            user_id = str(user.id)
-            file_list = os.listdir(f"{SYS_PIT_DIR_PATH}")
-            fl_len = len(file_list)
-            iterator = 0;
-            found = False
-            while iterator < fl_len:
-                    if user_id == file_list[iterator]:
-                            found = True
-                            break;
-                    iterator = iterator + 1
-            
-            if found == False:
-                    await interaction.response.send_message("Could not find role ID's, applying greenrole")
-                    greenrole = discord.Object(id=role_member)
-                    await user.edit(roles=[greenrole])
+            if await generic_unpit(user) == False:
                     await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
                     return
-
-            full_path = SYS_PIT_DIR_PATH+"/"+file_list[iterator]
-            role_ids = open(full_path, "r").read().split('\n')
-            role_ids_int = [int(role_id) for role_id in role_ids if role_id.strip().isdigit()]
-            roles_list_objects = [discord.Object(id=role_id) for role_id in role_ids_int]
-            await user.edit(roles=roles_list_objects)
+            
             await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
             channel = bot.get_channel(channel_pplofthepit) 
             await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for reason: {reason}")
-            os.remove(full_path)
-        elif interaction.user.guild_permissions.manage_roles and reason == "":
-            user_id = str(user.id)
-            file_list = os.listdir(f"{SYS_PIT_DIR_PATH}")
-            fl_len = len(file_list)
-            iterator = 0;
-            found = False
-            while iterator < fl_len:
-                    if user_id == file_list[iterator]:
-                            found = True
-                            break;
-                    iterator = iterator + 1
             
-            if found == False:
-                    await interaction.response.send_message("Could not find role ID's, applying greenrole")
-                    greenrole = discord.Object(id=role_member)
-                    await user.edit(roles=[greenrole])
+        elif interaction.user.guild_permissions.manage_roles and reason == "":
+            if await generic_unpit(user) == False:
                     await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
                     return
-            full_path = SYS_PIT_DIR_PATH+"/"+file_list[iterator]
-            role_ids = open(full_path, "r").read().split('\n')
-            role_ids_int = [int(role_id) for role_id in role_ids if role_id.strip().isdigit()]
-            roles_list_objects = [discord.Object(id=role_id) for role_id in role_ids_int]
-            await user.edit(roles=roles_list_objects)
             await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
             channel = bot.get_channel(channel_pplofthepit) 
             await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for unknown reasons!")
-            os.remove(full_path)
         else:
             await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
     except discord.Forbidden:
