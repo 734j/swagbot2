@@ -301,8 +301,29 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
     try:
         # 
         if interaction.user.guild_permissions.manage_roles and reason != "":
-            greenrole = discord.Object(id=role_member)
-            await user.edit(roles=[greenrole])
+            user_id = str(user.id)
+            file_list = os.listdir(f"{SYS_PIT_DIR_PATH}")
+            fl_len = len(file_list)
+            iterator = 0;
+            found = False
+            while iterator < fl_len:
+                    if user_id == file_list[iterator]:
+                            found = True
+                            break;
+                    iterator = iterator + 1
+            # print(file_list[iterator])
+            if found == False:
+                    await interaction.response.send_message("Could not find role ID's, applying greenrole")
+                    greenrole = discord.Object(id=role_member)
+                    await user.edit(roles=[greenrole])
+                    await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
+                    return
+            full_path = SYS_PIT_DIR_PATH+"/"+file_list[iterator]
+            role_ids = open(full_path, "r").read().split('\n')
+            role_ids_int = [int(role_id) for role_id in role_ids if role_id.strip().isdigit()]
+            #guild = discord.Object(id=server_id)
+            roles = [discord.Object(id=role_id) for role_id in role_ids_int]
+            await user.edit(roles=roles)
             await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
             channel = bot.get_channel(channel_pplofthepit) 
             await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for reason: {reason}")
