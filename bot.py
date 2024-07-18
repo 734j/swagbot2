@@ -3,6 +3,7 @@ from discord.utils import get # New import
 from discord.ext import commands
 import discord
 import random
+import time
 
 intents = discord.Intents.all()
 intents.members = True
@@ -346,7 +347,7 @@ async def roulette(interaction: discord.Interaction, pit: str = "", russian: str
 				await interaction.followup.send("-# *click*")
 				time.sleep(1)
 				await interaction.followup.send("# BANG.\n Your head suddenly starts resembling a red daisy. You are dead.")
-				await interaction.user.send("You are kicked from 69SwagBalls420 Cord for dying to a russian roulette.")
+				await interaction.user.send("You are kicked from 69SwagBalls420 Cord for dying to a russian roulette.\n You can join back here: https://discord.gg/NUWJZPsy5f")
 				await interaction.user.kick(reason = "Swagbot: Russian roulette death")
 				
 
