@@ -208,7 +208,8 @@ async def calc(interaction: discord.Interaction, value: str, system: str):
         await interaction.response.send_message("Invalid input")
         
 # PITTING SYSTEM
-async def generic_pit(user): # Use this when pitting someone in another function. Does not include reason.
+async def generic_pit(interaction, user): # Use this when pitting someone in another function. Does not include reason.
+        
         user_id = str(user.id) # gets user id
         user_roles_ids = user.roles # gets list of roles user has
         list_len = len(user_roles_ids) 
@@ -247,14 +248,14 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
     try:
         pit = bot.get_channel(channel_pit)
         if interaction.user.guild_permissions.manage_roles and reason != "":
-            await generic_pit(user)
+            await generic_pit(interaction, user)
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
             channel = bot.get_channel(channel_pplofthepit)
             await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
             await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for {reason}.")
             await pit.send (f"A loud thud shakes the depths of the Pit as {user.mention} ({user}) falls to the ground... Welcome your new friend.")
         elif interaction.user.guild_permissions.manage_roles and reason == "":
-            await generic_pit(user)
+            await generic_pit(interaction, user)
             channel = bot.get_channel(channel_pplofthepit)
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
             await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
@@ -267,7 +268,8 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
     except Exception as e:
             await interaction.response.send_message(f"An unexpected error occurred: {str(e)}", ephemeral=True)
 
-async def generic_unpit(user):
+async def generic_unpit(interaction, user):
+        
         user_id = str(user.id)
         file_list = os.listdir(f"{SYS_PIT_DIR_PATH}")
         fl_len = len(file_list)
@@ -284,7 +286,7 @@ async def generic_unpit(user):
                 greenrole = discord.Object(id=role_member)
                 await user.edit(roles=[greenrole])
                 return False
-
+        
         full_path = SYS_PIT_DIR_PATH+"/"+file_list[iterator]
         role_ids = open(full_path, "r").read().split('\n')
         role_ids_int = [int(role_id) for role_id in role_ids if role_id.strip().isdigit()]
@@ -317,8 +319,7 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
 
     try:
         if interaction.user.guild_permissions.manage_roles and reason != "":
-            if await generic_unpit(user) == False:
-                    await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
+            if await generic_unpit(interaction, user) == False:
                     return
             
             await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
@@ -326,8 +327,7 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
             await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for reason: {reason}")
             
         elif interaction.user.guild_permissions.manage_roles and reason == "":
-            if await generic_unpit(user) == False:
-                    await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
+            if await generic_unpit(interaction, user) == False:
                     return
             await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
             channel = bot.get_channel(channel_pplofthepit) 
