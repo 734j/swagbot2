@@ -301,28 +301,59 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
 	description="@someone with cooler features",
 	guild=discord.Object(id=server_id)
 )
-@app_commands.describe(pit="If random user shall be pitted. Type YUP! case senstive if you want to do this!")
+@app_commands.describe(pit="If random user shall be failed. Type YUP! case senstive if you want to do this!", russian="blanks for no kick and kick for kicking upon death")
 
-async def roulette(interaction: discord.Interaction, pit: str = ""):
-	guild = bot.get_guild(server_id)
-	# God give me strength
-	# UPD: I'm going to hang myself'
-	# UPD: we are so back
-	# UPD: BRO
-	channel = bot.get_channel(channel_pplofthepit)
-	if pit == "":
-		randoms = random.choice(guild.members)
-		await interaction.response.send_message(f"{randoms.mention} has won the roulette!")
-	elif pit == "YUP!" and interaction.user.guild_permissions.manage_roles:
-		randoms = random.choice(guild.members)
-		pitted = discord.Object(id=role_pitted) # What the fuck am I doing I swear to god/Oh i think i got it lemme try
-		await interaction.response.send_message(f"{randoms.mention} has been drawn for the random pitting! Congratulations!")
-		await randoms.edit(roles=[pitted])
-		await randoms.send("You have been by random chosen to be pitted in 69SwagBalls420 Cord! You can be unpitted upon request.")
-		await channel.send(f"{randoms.mention} was pitted by {interaction.user.mention} in the result of a pit roulette. Epic fail!")
-	elif pit == "YUP!" and not interaction.user.guild_permissions.manage_roles:
-		await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.")
+async def roulette(interaction: discord.Interaction, pit: str = "", russian: str = ""):
+		guild = bot.get_guild(server_id)
+		channel = bot.get_channel(channel_pplofthepit)
+		# God give me strength
+		# UPD: I'm going to hang myself'
+		# UPD: we are so back
+		# UPD: BRO
+		if pit == "" and russian == "":
+			randoms = random.choice(guild.members)
+			await interaction.response.send_message(f"{randoms.mention} has won the roulette!")
+		elif pit == "YUP!" and russian == "" and interaction.user.guild_permissions.manage_roles:
+			randoms = random.choice(guild.members)
+			pitted = discord.Object(id=role_pitted) # What the fuck am I doing I swear to god/Oh i think i got it lemme try
+			await interaction.response.send_message(f"{randoms.mention} has won the justin bieber concert tickers! Congratulations!")
+			await randoms.edit(roles=[pitted])
+			await randoms.send("You have been by random chosen to be pitted in Ragecord! You can be unpitted upon request.")
+			await channel.send(f"{randoms.mention} was failed by {interaction.user.mention} in the result of a pit roulette. Epic fail!")
+		elif pit == "YUP!" and (russian == "blanks" or russian == "kick"):
+			await interaction.response.send_message(f"You can not activate both pit and russian at the same time!")
+		elif pit == "" and russian == "blanks":
+			rng = random.randint(1, 6)
+			await interaction.response.send_message("You pick up the gun, swirl the chamber and swirl it... You will be killed if it lands on 1...")
+			time.sleep(4)
+			if rng != 1:
+				await interaction.followup.send("-# *click*")
+				time.sleep(2)
+				await interaction.followup.send(f"You open your eyes... You are still standing... (Your rolled is: damn {rng})")
+			elif rng == 1:
+				await interaction.followup.send("-# *click*")
+				time.sleep(1)
+				await interaction.followup.send("# BANG.\n Your head suddenly starts resembling a red daisy. You are dead.")
+		elif pit == "" and russian == "kick":
+			rng = random.randint(1, 6)
+			await interaction.response.send_message("You pick up the gun, swirl the chamber and swirl it... You will be kicked if it lands on 1...")
+			time.sleep(4)
+			if rng != 1:
+				await interaction.followup.send("-# *click*")
+				time.sleep(2)
+				await interaction.followup.send(f"You open your eyes... You are still standing... (Your rolled is: damn {rng})")
+			elif rng == 1:
+				await interaction.followup.send("-# *click*")
+				time.sleep(1)
+				await interaction.followup.send("# BANG.\n Your head suddenly starts resembling a red daisy. You are dead.")
+				await interaction.user.send("You are kicked from 69SwagBalls420 Cord for dying to a russian roulette.")
+				await interaction.user.kick(reason = "Swagbot: Russian roulette death")
+				
 
+		
+		elif pit == "YUP!" or russian == "blanks" or russian == "kick" and not interaction.user.guild_permissions.manage_roles:
+			await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.")
+			
 @tree.command(
 	name="cowsay",
 	description="The iconic CLI tool now on Discord!",
