@@ -10,7 +10,7 @@ intents = discord.Intents.all()
 intents.members = True
 COMMIT = 'TESTING_VERSION'
 TOKEN = 'YOUR TOKEN HERE'
-SYS_PIT_DIR_PATH = "/home/issjbrfs/swagbot2-run-dir/pitroles"
+SYS_PIT_DIR_PATH = "YOUR LOG PATH"
 bot = commands.Bot(command_prefix="(", intents=intents)
 tree = bot.tree
 
