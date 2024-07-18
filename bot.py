@@ -323,4 +323,28 @@ async def roulette(interaction: discord.Interaction, pit: str = ""):
 		elif pit == "YUP!" and not interaction.user.guild_permissions.manage_roles:
 			await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.")
 
+@tree.command(
+	name="cowsay",
+	description="The iconic CLI tool now on Discord!",
+	guild=discord.Object(id=server_id)
+)
+async def cowsay(interaction: discord.Interaction, text: str):
+	if len(text) <= 40:
+       
+          response = f"""
+  {"_" * len(text)}
+< {text} >
+  {"-" * len(text)}
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||
+                          
+"""
+          await interaction.response.send_message(content=f"```{response}```")
+	elif len(text) > 40:
+	      chars = len(text)
+	      await interaction.response.send_message(f"Please type in a phrase less than 40 characters. You currently used {chars} characters.")
+
 bot.run(TOKEN)
