@@ -1,6 +1,7 @@
 from discord import app_commands
 from discord.utils import get # New import
 from discord.ext import commands
+import os
 import discord
 import random
 import time
@@ -9,6 +10,7 @@ intents = discord.Intents.all()
 intents.members = True
 COMMIT = 'TESTING_VERSION'
 TOKEN = 'YOUR TOKEN HERE'
+SYS_PIT_DIR_PATH = "/home/issjbrfs/swagbot2-run-dir/pitroles"
 bot = commands.Bot(command_prefix="(", intents=intents)
 tree = bot.tree
 
@@ -32,8 +34,9 @@ role_swagballer = 1003732468370776125
 
 @bot.event
 async def on_ready():
-	await tree.sync(guild=discord.Object(id=server_id))
-	print("The bot has successfully started.")
+        await tree.sync(guild=discord.Object(id=server_id))
+        print("The bot has successfully started.")
+        print(SYS_PIT_DIR_PATH)
 
 @bot.event
 async def on_member_join(member):
@@ -206,6 +209,21 @@ async def calc(interaction: discord.Interaction, value: str, system: str):
         await interaction.response.send_message("Invalid input")
         
 # PITTING SYSTEM
+async def generic_pit(interaction, user): # Use this when pitting someone in another function. Does not include reason.
+        
+        user_id = str(user.id) # gets user id
+        user_roles_ids = user.roles # gets list of roles user has
+        list_len = len(user_roles_ids) 
+        file = open(f"{SYS_PIT_DIR_PATH}/{user_id}", "w") 
+        iterate = 0
+        while iterate < list_len:
+                file.write(str(user_roles_ids[iterate].id)+"\n") # write each role ID in to file
+                iterate = iterate + 1
+                
+        file.close()
+        pit_role = discord.Object(id=role_pitted)  # pit role
+        await user.edit(roles=[pit_role])
+
 @tree.command(
     name="pit",
     description="pits someone",
@@ -231,16 +249,14 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
     try:
         pit = bot.get_channel(channel_pit)
         if interaction.user.guild_permissions.manage_roles and reason != "":
-            pit_role = discord.Object(id=role_pitted)  # pit role
-            await user.edit(roles=[pit_role])
+            await generic_pit(interaction, user)
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
             channel = bot.get_channel(channel_pplofthepit)
             await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
             await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for {reason}.")
             await pit.send (f"A loud thud shakes the depths of the Pit as {user.mention} ({user}) falls to the ground... Welcome your new friend.")
         elif interaction.user.guild_permissions.manage_roles and reason == "":
-            pit_role = discord.Object(id=role_pitted)  # pit role
-            await user.edit(roles=[pit_role])
+            await generic_pit(interaction, user)
             channel = bot.get_channel(channel_pplofthepit)
             await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
             await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
@@ -253,6 +269,32 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
     except Exception as e:
             await interaction.response.send_message(f"An unexpected error occurred: {str(e)}", ephemeral=True)
 
+async def generic_unpit(interaction, user):
+        
+        user_id = str(user.id)
+        file_list = os.listdir(f"{SYS_PIT_DIR_PATH}")
+        fl_len = len(file_list)
+        iterator = 0;
+        found = False
+        while iterator < fl_len:
+                if user_id == file_list[iterator]:
+                        found = True
+                        break;
+                iterator = iterator + 1
+            
+        if found == False:
+                await interaction.response.send_message("Could not find role ID's, applying greenrole")
+                greenrole = discord.Object(id=role_member)
+                await user.edit(roles=[greenrole])
+                return False
+        
+        full_path = SYS_PIT_DIR_PATH+"/"+file_list[iterator]
+        role_ids = open(full_path, "r").read().split('\n')
+        role_ids_int = [int(role_id) for role_id in role_ids if role_id.strip().isdigit()]
+        roles_list_objects = [discord.Object(id=role_id) for role_id in role_ids_int]
+        await user.edit(roles=roles_list_objects)
+        os.remove(full_path)
+            
 @tree.command(
     name="unpit",
     description="unpits someone",
@@ -277,19 +319,20 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
         return
 
     try:
-        # 
         if interaction.user.guild_permissions.manage_roles and reason != "":
-            greenrole = discord.Object(id=role_member)
-            await user.edit(roles=[greenrole])
+            if await generic_unpit(interaction, user) == False:
+                    return
+            
             await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
             channel = bot.get_channel(channel_pplofthepit) 
             await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for reason: {reason}")
+            
         elif interaction.user.guild_permissions.manage_roles and reason == "":
-            greenrole = discord.Object(id=role_member)
-            await user.edit(roles=[greenrole])
-            channel = bot.get_channel(channel_pplofthepit)
+            if await generic_unpit(interaction, user) == False:
+                    return
             await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
-            await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for unknown reasons! :evil:")
+            channel = bot.get_channel(channel_pplofthepit) 
+            await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for unknown reasons!")
         else:
             await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
     except discord.Forbidden:
