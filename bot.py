@@ -1,6 +1,7 @@
 from discord import app_commands
 from discord.utils import get # New import
 from discord.ext import commands
+from random import randint
 import os
 import discord
 import random
@@ -21,6 +22,7 @@ server_id = 938728183203758080
 channel_joinleave = 943602154428571708 # join and leave channel
 channel_pplofthepit = 1243174332293976095
 channel_pit = 1057343199888285786
+channel_announcments = 1263195223803035668
 
 #Roles
 role_admin = 938787942657327114
@@ -422,5 +424,33 @@ async def cowsay(interaction: discord.Interaction, text: str):
 	elif len(text) > 40:
 	      chars = len(text)
 	      await interaction.response.send_message(f"Please type in a phrase less than 40 characters. You currently used {chars} characters.")
+
+@tree.command(
+    name="mod-lottery",
+    description="Have a 1 in 500000 chance to get mod perms!",
+    guild=discord.Object(id=server_id)
+)
+async def loto(interaction: discord.Interaction):
+    rng = randint(1, 500000)
+    user = interaction.user
+    if not interaction.user.guild_permissions.manage_roles:
+        if rng == 43662:
+            await interaction.response.send_message("https://i.postimg.cc/R0z661Qz/ezgif-2-d2c71cd8c607.gif")
+            time.sleep(3)
+            await interaction.followup.send("# 🚨🚨🚨 YOU HAVE WON THE MOD LOTTO! 🚨🚨🚨")
+            mod = discord.Object(id=role_mod)
+            await user.add_roles(mod)
+            channel = bot.get_channel(channel_announcments)
+            await channel.send(f"# 🚨🚨🚨 ALERT 🚨🚨🚨\n### {interaction.user.mention} has rolled a ONE IN FIVE HUNDRED THOUSAND chance (0.0002%) and WON THE MOD LOTTO!") 
+        elif rng == 214:
+            await interaction.response.send_message("https://i.postimg.cc/R0z661Qz/ezgif-2-d2c71cd8c607.gif")
+            time.sleep(3)
+            await interaction.followup.send("yep sorry for edging you buddy you lost actually, try again")
+            time.sleep(1)
+            await interaction.followup.send(f"Aw dang it! You rolled 214, but the winning number is 43662. Try again!")
+        else:
+            await interaction.response.send_message(f"Aw dang it! You rolled {rng}, but the winning number is 43662. Try again!")
+    else:
+        await interaction.response.send_message("You are not eligible for the lottery!")        
 
 bot.run(TOKEN)
