@@ -368,7 +368,7 @@ async def roulette(interaction: discord.Interaction, pit: str = "", russian: str
 			await interaction.response.send_message(f"You can not activate both pit and russian at the same time!")
 		elif pit == "" and russian == "blanks":
 			rng = random.randint(1, 6)
-			await interaction.response.send_message("You pick up the gun, swirl the chamber and swirl it... You will be killed if it lands on 1...")
+			await interaction.response.send_message("You pick up the gun, swirl the chamber and point it at your head... You will be killed if it lands on 1...")
 			time.sleep(4)
 			if rng != 1:
 				await interaction.followup.send("-# *click*")
@@ -380,7 +380,7 @@ async def roulette(interaction: discord.Interaction, pit: str = "", russian: str
 				await interaction.followup.send("# BANG.\n Your head suddenly starts resembling a red daisy. You are dead.")
 		elif pit == "" and russian == "kick":
 			rng = random.randint(1, 6)
-			await interaction.response.send_message("You pick up the gun, swirl the chamber and swirl it... You will be kicked if it lands on 1...")
+			await interaction.response.send_message("You pick up the gun, swirl the chamber and point it at your head.... You will be kicked if it lands on 1...")
 			time.sleep(4)
 			if rng != 1:
 				await interaction.followup.send("-# *click*")
