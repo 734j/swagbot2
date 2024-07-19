@@ -356,9 +356,13 @@ async def roulette(interaction: discord.Interaction, pit: str = "", russian: str
 		# UPD: BRO
 		if pit == "" and russian == "":
 			randoms = random.choice(guild.members)
+			while randoms.bot:
+				randoms = random.choice(guild.members) #randomly pick until user is NOT a bot
 			await interaction.response.send_message(f"{randoms.mention} has won the roulette!")
 		elif pit == "YUP!" and russian == "" and interaction.user.guild_permissions.manage_roles:
 			randoms = random.choice(guild.members)
+			while randoms.bot:
+				randoms = random.choice(guild.members) #randomly pick until user is NOT a bot
 			pitted = discord.Object(id=role_pitted) # What the fuck am I doing I swear to god/Oh i think i got it lemme try
 			await interaction.response.send_message(f"{randoms.mention} has won the justin bieber concert tickers! Congratulations!")
 			await randoms.edit(roles=[pitted])
