@@ -345,7 +345,7 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
 	description="@someone with cooler features",
 	guild=discord.Object(id=server_id)
 )
-@app_commands.describe(pit="If random user shall be failed. Type YUP! case senstive if you want to do this!", russian="blanks for no kick and kick for kicking upon death")
+@app_commands.describe(pit="If random user shall be failed. Type YUP! case senstive if you want to do this!", russian="Type \"blanks\" for no kick and \"kick\" for kicking upon death")
 
 async def roulette(interaction: discord.Interaction, pit: str = "", russian: str = ""):
 		guild = bot.get_guild(server_id)
@@ -397,7 +397,8 @@ async def roulette(interaction: discord.Interaction, pit: str = "", russian: str
 		
 		elif pit == "YUP!" or russian == "blanks" or russian == "kick" and not interaction.user.guild_permissions.manage_roles:
 			await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.")
-			
+		elif pit != "YUP!" or pit != "" or russian != "blanks" or russian != "kick":
+                        await interaction.response.send_message("Erm... invalid input!")
 @tree.command(
 	name="cowsay",
 	description="The iconic CLI tool now on Discord!",
