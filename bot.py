@@ -31,7 +31,8 @@ role_bot2 = 998594848582025269
 role_pitted = 1057342828205846538
 role_member = 938804320026099742
 role_swagballer = 1003732468370776125
-
+role_anyone = 1263879103803687046
+	
 @bot.event
 async def on_ready():
         await tree.sync(guild=discord.Object(id=server_id))
@@ -48,6 +49,20 @@ async def on_member_remove(member):
     channel = bot.get_channel(channel_joinleave)
     await channel.send(f"{member.mention} ({member}) left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
 
+#@anyone
+@bot.event
+async def on_message(message):
+    if message.author == bot.user: #bot doesn't reply to itself
+        return
+    for role in message.role_mentions:
+        if role_anyone == role.id: #checks if @anyone pinged
+            for anyoneMemb in role.members:
+                await anyoneMemb.remove_roles(discord.Object(id=role_anyone)) #removes @anyone from previous owner
+            guild = bot.get_guild(server_id)
+            anyoneRand = random.choice(guild.members) 
+            await anyoneRand.add_roles(discord.Object(id=role_anyone)) #adds @anyone to new owner
+    return
+	
 @tree.command(
 name='hello',
 description='haii',
