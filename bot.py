@@ -1,6 +1,7 @@
 from discord import app_commands
 from discord.utils import get # New import
 from discord.ext import commands
+from random import randint
 import os
 import discord
 import random
@@ -21,6 +22,7 @@ server_id = 938728183203758080
 channel_joinleave = 943602154428571708 # join and leave channel
 channel_pplofthepit = 1243174332293976095
 channel_pit = 1057343199888285786
+channel_announcments = 1263195223803035668
 
 #Roles
 role_admin = 938787942657327114
@@ -31,7 +33,8 @@ role_bot2 = 998594848582025269
 role_pitted = 1057342828205846538
 role_member = 938804320026099742
 role_swagballer = 1003732468370776125
-
+role_anyone = 1263879103803687046
+	
 @bot.event
 async def on_ready():
         await tree.sync(guild=discord.Object(id=server_id))
@@ -48,6 +51,20 @@ async def on_member_remove(member):
     channel = bot.get_channel(channel_joinleave)
     await channel.send(f"{member.mention} ({member}) left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
 
+#@anyone
+@bot.event
+async def on_message(message):
+    if message.author == bot.user: #bot doesn't reply to itself
+        return
+    for role in message.role_mentions:
+        if role_anyone == role.id: #checks if @anyone pinged
+            for anyoneMemb in role.members:
+                await anyoneMemb.remove_roles(discord.Object(id=role_anyone)) #removes @anyone from previous owner
+            guild = bot.get_guild(server_id)
+            anyoneRand = random.choice(guild.members) 
+            await anyoneRand.add_roles(discord.Object(id=role_anyone)) #adds @anyone to new owner
+    return
+	
 @tree.command(
 name='hello',
 description='haii',
@@ -360,12 +377,10 @@ async def roulette(interaction: discord.Interaction, pit: str = "", russian: str
 				randoms = random.choice(guild.members) #randomly pick until user is NOT a bot
 			await interaction.response.send_message(f"{randoms.mention} has won the roulette!")
 		elif pit == "YUP!" and russian == "" and interaction.user.guild_permissions.manage_roles:
-			randoms = random.choice(guild.members)
-			while randoms.bot:
+      while randoms.bot:
 				randoms = random.choice(guild.members) #randomly pick until user is NOT a bot
-			pitted = discord.Object(id=role_pitted) # What the fuck am I doing I swear to god/Oh i think i got it lemme try
-			await interaction.response.send_message(f"{randoms.mention} has won the justin bieber concert tickers! Congratulations!")
-			await randoms.edit(roles=[pitted])
+      await generic_pit(interaction, randoms)
+			await interaction.response.send_message(f"{randoms.mention} has been drawn for the pitting! Congratulations!")
 			await randoms.send("You have been by random chosen to be pitted in Ragecord! You can be unpitted upon request.")
 			await channel.send(f"{randoms.mention} was failed by {interaction.user.mention} in the result of a pit roulette. Epic fail!")
 		elif pit == "YUP!" and (russian == "blanks" or russian == "kick"):
@@ -426,5 +441,33 @@ async def cowsay(interaction: discord.Interaction, text: str):
 	elif len(text) > 40:
 	      chars = len(text)
 	      await interaction.response.send_message(f"Please type in a phrase less than 40 characters. You currently used {chars} characters.")
+
+@tree.command(
+    name="mod-lottery",
+    description="Have a 1 in 500000 chance to get mod perms!",
+    guild=discord.Object(id=server_id)
+)
+async def loto(interaction: discord.Interaction):
+    rng = randint(1, 500000)
+    user = interaction.user
+    if not interaction.user.guild_permissions.manage_roles:
+        if rng == 43662:
+            await interaction.response.send_message("https://i.postimg.cc/R0z661Qz/ezgif-2-d2c71cd8c607.gif")
+            time.sleep(3)
+            await interaction.followup.send("# 🚨🚨🚨 YOU HAVE WON THE MOD LOTTO! 🚨🚨🚨")
+            mod = discord.Object(id=role_mod)
+            await user.add_roles(mod)
+            channel = bot.get_channel(channel_announcments)
+            await channel.send(f"# 🚨🚨🚨 ALERT 🚨🚨🚨\n### {interaction.user.mention} has rolled a ONE IN FIVE HUNDRED THOUSAND chance (0.0002%) and WON THE MOD LOTTO!") 
+        elif rng == 214:
+            await interaction.response.send_message("https://i.postimg.cc/R0z661Qz/ezgif-2-d2c71cd8c607.gif")
+            time.sleep(3)
+            await interaction.followup.send("yep sorry for edging you buddy you lost actually, try again")
+            time.sleep(1)
+            await interaction.followup.send(f"Aw dang it! You rolled 214, but the winning number is 43662. Try again!")
+        else:
+            await interaction.response.send_message(f"Aw dang it! You rolled {rng}, but the winning number is 43662. Try again!")
+    else:
+        await interaction.response.send_message("You are not eligible for the lottery!")        
 
 bot.run(TOKEN)
