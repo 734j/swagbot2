@@ -373,10 +373,13 @@ async def roulette(interaction: discord.Interaction, pit: str = "", russian: str
 		# UPD: BRO
 		if pit == "" and russian == "":
 			randoms = random.choice(guild.members)
+			while randoms.bot:
+				randoms = random.choice(guild.members) #randomly pick until user is NOT a bot
 			await interaction.response.send_message(f"{randoms.mention} has won the roulette!")
 		elif pit == "YUP!" and russian == "" and interaction.user.guild_permissions.manage_roles:
-			randoms = random.choice(guild.members)
-            		await generic_pit(interaction, randoms)
+      while randoms.bot:
+				randoms = random.choice(guild.members) #randomly pick until user is NOT a bot
+      await generic_pit(interaction, randoms)
 			await interaction.response.send_message(f"{randoms.mention} has been drawn for the pitting! Congratulations!")
 			await randoms.send("You have been by random chosen to be pitted in Ragecord! You can be unpitted upon request.")
 			await channel.send(f"{randoms.mention} was failed by {interaction.user.mention} in the result of a pit roulette. Epic fail!")
