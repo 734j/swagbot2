@@ -377,6 +377,7 @@ async def roulette(interaction: discord.Interaction, pit: str = "", russian: str
 			randoms = random.choice(guild.members) #randomly pick until user is NOT a bot
 		await interaction.response.send_message(f"{randoms.mention} has won the roulette!")
 	elif pit == "YUP!" and russian == "" and interaction.user.guild_permissions.manage_roles:
+		randoms = random.choice(guild.members)
 		while randoms.bot:
 			randoms = random.choice(guild.members) #randomly pick until user is NOT a bot
 		await generic_pit(interaction, randoms)
