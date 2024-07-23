@@ -472,16 +472,15 @@ async def loto(interaction: discord.Interaction):
     else:
         await interaction.response.send_message("You are not eligible for the lottery!")        
 
-bot.run(TOKEN)
-
 # SENATE BILLS
 
 class Buttons(discord.ui.View):
-    def __init__(self, title, user, *, timeout=86400): #Bill is active for 24 hours
+    def __init__(self, title, description, user, *, timeout=86400): #Bill is active for 24 hours
         super().__init__(timeout=timeout)
         guild = bot.get_guild(server_id)
         self.senators = guild.get_role(role_senator).members #Senator list
         self.title = title
+	self.description = description
         self.user = user
         self.votes = [0]*len(self.senators) #Script saves the votes of each senator here
     @discord.ui.button(label="🟩",style=discord.ButtonStyle.green)
@@ -522,7 +521,7 @@ class Buttons(discord.ui.View):
         print("The voting period has ended.")
         for button in self.children:
             button.disabled = True 
-        await bot.get_channel(channel_senate).send(f"# Voting for the following bill has ended:\n## {self.title}\n### Sponsored by Senator {self.user}\n**YAY:** {self.votes_yay}\n**NAY:** {self.votes_nay}\n**ABSTAIN:** {self.votes_abstain}")
+        await bot.get_channel(channel_senate).send(f"# Voting for the following bill has ended:\n## {self.title}\n### Sponsored by Senator {self.user}\n {self.description}\n**YAY:** {self.votes_yay}\n**NAY:** {self.votes_nay}\n**ABSTAIN:** {self.votes_abstain}")
         return
 
 @tree.command(
@@ -533,7 +532,7 @@ class Buttons(discord.ui.View):
 async def bill(interaction: discord.Interaction, title: str, description: str):
         user = interaction.user
         guild = bot.get_guild(server_id)
-        view = Buttons(title, user)
+        view = Buttons(title, description, user)
         if user in guild.get_role(role_senator).members:  
                 embed = discord.Embed(title=title, color=discord.Color.yellow())
                 embed.add_field(name="Bill Sponsor", value=user.mention, inline=True)
@@ -545,3 +544,5 @@ async def bill(interaction: discord.Interaction, title: str, description: str):
         else:
                 await interaction.response.send_message("You have no permission to do this!", ephemeral=True)
         return
+
+bot.run(TOKEN)
