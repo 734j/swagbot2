@@ -364,9 +364,9 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
 	description="@someone with cooler features",
 	guild=discord.Object(id=server_id)
 )
-@app_commands.describe(pit="If random user shall be failed. Type YUP! case senstive if you want to do this!", russian="Type \"blanks\" for no kick and \"kick\" for kicking upon death")
+@app_commands.describe(pit="If random user shall be pitted.", russian="blanks for no kick and kick for kicking upon death")
 
-async def roulette(interaction: discord.Interaction, pit: str = "", russian: str = ""):
+async def roulette(interaction: discord.Interaction, pit: Literal["YUP!"] = "", russian: Literal["kick", "blanks"] = ""):
 	guild = bot.get_guild(server_id)
 	channel = bot.get_channel(channel_pplofthepit)
 	# God give me strength
