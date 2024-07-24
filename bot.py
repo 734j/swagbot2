@@ -364,9 +364,9 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
 	description="@someone with cooler features",
 	guild=discord.Object(id=server_id)
 )
-@app_commands.describe(pit="If random user shall be failed. Type YUP! case senstive if you want to do this!", russian="Type \"blanks\" for no kick and \"kick\" for kicking upon death")
+@app_commands.describe(pit="If random user shall be pitted.", russian="blanks for no kick and kick for kicking upon death")
 
-async def roulette(interaction: discord.Interaction, pit: str = "", russian: str = ""):
+async def roulette(interaction: discord.Interaction, pit: Literal["YUP!"] = "", russian: Literal["kick", "blanks"] = ""):
 	guild = bot.get_guild(server_id)
 	channel = bot.get_channel(channel_pplofthepit)
 	# God give me strength
@@ -384,7 +384,7 @@ async def roulette(interaction: discord.Interaction, pit: str = "", russian: str
 			randoms = random.choice(guild.members) #randomly pick until user is NOT a bot
 		await generic_pit(interaction, randoms)
 		await interaction.response.send_message(f"{randoms.mention} has been drawn for the pitting! Congratulations!")
-		await randoms.send("You have been by random chosen to be pitted in Ragecord! You can be unpitted upon request.")
+		await randoms.send("You have been by random chosen to be pitted in SwagCord! You can be unpitted upon request.")
 		await channel.send(f"{randoms.mention} was failed by {interaction.user.mention} in the result of a pit roulette. Epic fail!")
 	elif pit == "YUP!" and (russian == "blanks" or russian == "kick"):
 		await interaction.response.send_message(f"You can not activate both pit and russian at the same time!")
