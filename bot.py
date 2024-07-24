@@ -6,6 +6,7 @@ import os
 import discord
 import random
 import time
+from typing import Literal
 
 intents = discord.Intents.all()
 intents.members = True
