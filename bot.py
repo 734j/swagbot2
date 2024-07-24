@@ -493,7 +493,7 @@ class Buttons(discord.ui.View):
 		else:
 			await interaction.response.send_message("You cannot vote!", ephemeral=True)
 		return
-		@discord.ui.button(label="⬜", style=discord.ButtonStyle.gray)
+	@discord.ui.button(label="⬜", style=discord.ButtonStyle.gray)
 		async def abstain(self,interaction:discord.Interaction, button:discord.ui.Button):
 			user = interaction.user
 			guild = bot.get_guild(server_id)
