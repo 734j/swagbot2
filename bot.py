@@ -45,13 +45,13 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    channel = bot.get_channel(channel_joinleave)
-    await channel.send(f"{member.mention} ({member}) joined the server!\nhttps://tenor.com/view/snsdmongus-dog-sideye-gif-21272558")
+        channel = bot.get_channel(channel_joinleave)
+        await channel.send(f"{member.mention} ({member}) joined the server!\nhttps://tenor.com/view/snsdmongus-dog-sideye-gif-21272558")
 
 @bot.event
 async def on_member_remove(member):
-    channel = bot.get_channel(channel_joinleave)
-    await channel.send(f"{member.mention} ({member}) left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
+        channel = bot.get_channel(channel_joinleave)
+        await channel.send(f"{member.mention} ({member}) left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
 
 #@anyone
 @bot.event
@@ -365,7 +365,6 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
 	guild=discord.Object(id=server_id)
 )
 @app_commands.describe(pit="If random user shall be pitted.", russian="blanks for no kick and kick for kicking upon death")
-
 async def roulette(interaction: discord.Interaction, pit: Literal["YUP!"] = "", russian: Literal["kick", "blanks"] = ""):
 	guild = bot.get_guild(server_id)
 	channel = bot.get_channel(channel_pplofthepit)
@@ -475,54 +474,54 @@ async def loto(interaction: discord.Interaction):
 # SENATE BILLS
 
 class Buttons(discord.ui.View):
-    def __init__(self, title, description, user, *, timeout=86400): #Bill is active for 24 hours
-        super().__init__(timeout=timeout)
-        guild = bot.get_guild(server_id)
-        self.senators = guild.get_role(role_senator).members #Senator list
-        self.title = title
-	self.description = description
-        self.user = user
-        self.votes = [0]*len(self.senators) #Script saves the votes of each senator here
-    @discord.ui.button(label="🟩",style=discord.ButtonStyle.green)
-    async def yay(self,interaction:discord.Interaction, button:discord.ui.Button):
-        user = interaction.user
-        guild = bot.get_guild(server_id)
-        if user in self.senators:        #User can ONLY vote if Senator
-                await interaction.response.send_message(f"{interaction.user.mention} has voted YES!")
-                self.votes[self.senators.index(user)] = "YAY"
-        else:
-                await interaction.response.send_message("You cannot vote!", ephemeral=True)
-        return
-    @discord.ui.button(label="⬜", style=discord.ButtonStyle.gray)
-    async def abstain(self,interaction:discord.Interaction, button:discord.ui.Button):
-        user = interaction.user
-        guild = bot.get_guild(server_id)
-        if user in guild.get_role(role_senator).members:    
-                await interaction.response.send_message(f"{interaction.user.mention} has ABSTAINED!")
-                self.votes[self.senators.index(user)] = "ABSTAIN"
-        else:
-                await interaction.response.send_message("You cannot vote!", ephemeral=True)
-        return    
-    @discord.ui.button(label="🟥", style=discord.ButtonStyle.red)
-    async def nay(self,interaction:discord.Interaction, button:discord.ui.Button):
-        user = interaction.user
-        guild = bot.get_guild(server_id)
-        if user in guild.get_role(role_senator).members:    
-                await interaction.response.send_message(f"{interaction.user.mention} has voted NO!")
-                self.votes[self.senators.index(user)] = "NAY"
-        else:
-                await interaction.response.send_message("You cannot vote!", ephemeral=True)
-        return
+	def __init__(self, title, description, user, *, timeout=86400): #Bill is active for 24 hours
+		super().__init__(timeout=timeout)
+		guild = bot.get_guild(server_id)
+		self.senators = guild.get_role(role_senator).members #Senator list
+		self.title = title
+		self.description = description
+		self.user = user
+		self.votes = [0]*len(self.senators) #Script saves the votes of each senator here
+	@discord.ui.button(label="🟩",style=discord.ButtonStyle.green)
+	async def yay(self,interaction:discord.Interaction, button:discord.ui.Button):
+		user = interaction.user
+		guild = bot.get_guild(server_id)
+		if user in self.senators:        #User can ONLY vote if Senator
+			await interaction.response.send_message(f"{interaction.user.mention} has voted YES!")
+			self.votes[self.senators.index(user)] = "YAY"
+		else:
+			await interaction.response.send_message("You cannot vote!", ephemeral=True)
+		return
+		@discord.ui.button(label="⬜", style=discord.ButtonStyle.gray)
+		async def abstain(self,interaction:discord.Interaction, button:discord.ui.Button):
+			user = interaction.user
+			guild = bot.get_guild(server_id)
+		if user in guild.get_role(role_senator).members:    
+			await interaction.response.send_message(f"{interaction.user.mention} has ABSTAINED!")
+			self.votes[self.senators.index(user)] = "ABSTAIN"
+		else:
+			await interaction.response.send_message("You cannot vote!", ephemeral=True)
+		return    
+	@discord.ui.button(label="🟥", style=discord.ButtonStyle.red)
+	async def nay(self,interaction:discord.Interaction, button:discord.ui.Button):
+		user = interaction.user
+		guild = bot.get_guild(server_id)
+		if user in guild.get_role(role_senator).members:    
+			await interaction.response.send_message(f"{interaction.user.mention} has voted NO!")
+			self.votes[self.senators.index(user)] = "NAY"
+		else:
+			await interaction.response.send_message("You cannot vote!", ephemeral=True)
+		return
 
-    async def on_timeout(self): #Once 24 hours pass, results are displayed in the Senate
-        self.votes_yay = self.votes.count("YAY")
-        self.votes_abstain = self.votes.count("ABSTAIN") + self.votes.count(0)
-        self.votes_nay = self.votes.count("NAY")
-        print("The voting period has ended.")
-        for button in self.children:
-            button.disabled = True 
-        await bot.get_channel(channel_senate).send(f"# Voting for the following bill has ended:\n## {self.title}\n### Sponsored by Senator {self.user}\n {self.description}\n**YAY:** {self.votes_yay}\n**NAY:** {self.votes_nay}\n**ABSTAIN:** {self.votes_abstain}")
-        return
+	async def on_timeout(self): #Once 24 hours pass, results are displayed in the Senate
+		self.votes_yay = self.votes.count("YAY")
+		self.votes_abstain = self.votes.count("ABSTAIN") + self.votes.count(0)
+		self.votes_nay = self.votes.count("NAY")
+		print("The voting period has ended.")
+		for button in self.children:
+			button.disabled = True 
+		await bot.get_channel(channel_senate).send(f"# Voting for the following bill has ended:\n## {self.title}\n### Sponsored by Senator {self.user}\n {self.description}\n**YAY:** {self.votes_yay}\n**NAY:** {self.votes_nay}\n**ABSTAIN:** {self.votes_abstain}")
+		return
 
 @tree.command(
     name="make-a-bill",
@@ -530,19 +529,17 @@ class Buttons(discord.ui.View):
     guild=discord.Object(id=server_id)
 )
 async def bill(interaction: discord.Interaction, title: str, description: str):
-        user = interaction.user
-        guild = bot.get_guild(server_id)
-        view = Buttons(title, description, user)
-        if user in guild.get_role(role_senator).members:  
-                embed = discord.Embed(title=title, color=discord.Color.yellow())
-                embed.add_field(name="Bill Sponsor", value=user.mention, inline=True)
-                embed.add_field(name="Bill description", value=description)
-
-                await interaction.response.send_message(embed=embed, view = view)
-
-                await view.wait()
-        else:
-                await interaction.response.send_message("You have no permission to do this!", ephemeral=True)
-        return
+	user = interaction.user
+	guild = bot.get_guild(server_id)
+	view = Buttons(title, description, user)
+	if user in guild.get_role(role_senator).members:  
+		embed = discord.Embed(title=title, color=discord.Color.yellow())
+		embed.add_field(name="Bill Sponsor", value=user.mention, inline=True)
+		embed.add_field(name="Bill description", value=description)
+		await interaction.response.send_message(embed=embed, view = view)
+		await view.wait()
+	else:
+		await interaction.response.send_message("You have no permission to do this!", ephemeral=True)
+	return
 
 bot.run(TOKEN)
