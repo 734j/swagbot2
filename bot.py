@@ -504,7 +504,8 @@ class Buttons(discord.ui.View):
 	@discord.ui.button(label="⬜", style=discord.ButtonStyle.gray)
 	async def abstain(self,interaction:discord.Interaction, button:discord.ui.Button):
 		user = interaction.user
-		if user in (bot.get_guild(server_id)).get_role(role_senator).members:    
+		guild = bot.get_guild(server_id)
+		if user in guild.get_role(role_senator).members:    
 			await interaction.response.send_message(f"{interaction.user.mention} has ABSTAINED!")
 			self.votes[self.senators.index(user)] = "ABSTAIN"
 		else:
