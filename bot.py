@@ -29,7 +29,7 @@ bot = commands.Bot(command_prefix="(", intents=intents)
 tree = bot.tree
 
 #Guild ID
-server_id = 1219008436428345528 #938728183203758080
+server_id = 938728183203758080
 
 #Channels
 channel_joinleave = 943602154428571708 # join and leave channel
