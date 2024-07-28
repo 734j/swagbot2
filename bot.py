@@ -8,6 +8,18 @@ import random
 import time
 from typing import Literal
 
+#Cowsay
+# pip install python-cowsay
+from cowsay import cowsay
+from io import StringIO
+from cowsay import read_dot_cow, cowthink
+
+import sys
+# insert at 1, 0 is the script path (or '' in REPL)
+sys.path.insert(1, '/home/dainis/swagbot2/misc')
+import cowfiles
+
+
 intents = discord.Intents.all()
 intents.members = True
 COMMIT = 'TESTING_VERSION'
@@ -425,24 +437,20 @@ async def roulette(interaction: discord.Interaction, pit: Literal["YUP!"] = "", 
 	description="The iconic CLI tool now on Discord!",
 	guild=discord.Object(id=server_id)
 )
-async def cowsay(interaction: discord.Interaction, text: str):
-	if len(text) <= 40:
-       
-          response = f"""
-  {"_" * len(text)}
-< {text} >
-  {"-" * len(text)}
-        \\   ^__^
-         \\  (oo)\\_______
-            (__)\\       )\\/\\
-                ||----w |
-                ||     ||
-                          
-"""
-          await interaction.response.send_message(content=f"```{response}```")
-	elif len(text) > 40:
-	      chars = len(text)
-	      await interaction.response.send_message(f"Please type in a phrase less than 40 characters. You currently used {chars} characters.")
+@app_commands.describe(dotcow="Load a different cowfile")
+async def cow(interaction: discord.Interaction, text: str, dotcow: Literal["blowfish", "small", "kitty", "bong", "supermilker"] = ""):
+    if len(text) <= 70 and dotcow == "":
+        await interaction.response.send_message(f"```{cowsay(text.strip())}```")
+    elif len(text) <= 70 and dotcow == "blowfish":
+        await interaction.response.send_message(f"```{cowsay(text.strip(), cowfile=cowfiles.blowfish)}```")
+    elif len(text) <= 70 and dotcow == "small":
+        await interaction.response.send_message(f"```{cowsay(text.strip(), cowfile=cowfiles.small)}```")
+    elif len(text) <= 70 and dotcow == "kitty":
+        await interaction.response.send_message(f"```{cowsay(text.strip(), cowfile=cowfiles.kitty)}```")
+    elif len(text) <= 70 and dotcow == "bong":
+        await interaction.response.send_message(f"```{cowsay(text.strip(), cowfile=cowfiles.bong)}```")
+    elif len(text) <= 70 and dotcow == "supermilker":
+        await interaction.response.send_message(f"```{cowsay(text.strip(), cowfile=cowfiles.supermilker)}```")
 
 @tree.command(
     name="mod-lottery",
