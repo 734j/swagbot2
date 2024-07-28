@@ -440,7 +440,7 @@ async def roulette(interaction: discord.Interaction, pit: Literal["YUP!"] = "", 
 @app_commands.describe(dotcow="Load a different cowfile")
 async def cow(interaction: discord.Interaction, text: str, dotcow: Literal["blowfish", "small", "kitty", "bong", "supermilker"] = ""):
         if len(text) > 70:
-                await interaction.response.send_message(f"You cannot exceed 70 characters.")
+                await interaction.response.send_message(f"You cannot exceed 70 characters.", ephemeral=True)
         elif len(text) <= 70 and dotcow == "":
                 await interaction.response.send_message(f"```{cowsay(text.strip())}```")
         elif len(text) <= 70 and dotcow == "blowfish":
