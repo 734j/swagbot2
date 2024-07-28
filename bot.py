@@ -13,10 +13,9 @@ from typing import Literal
 from cowsay import cowsay
 from io import StringIO
 from cowsay import read_dot_cow, cowthink
-
 import sys
-# insert at 1, 0 is the script path (or '' in REPL)
-sys.path.insert(1, '/home/dainis/swagbot2/misc')
+CWD_PATH = os.getcwd() # This grabs the current working directory, no need for hardcoded strings.
+sys.path.insert(1, f"{CWD_PATH}/misc")
 import cowfiles
 
 
@@ -55,6 +54,7 @@ async def on_ready():
         await tree.sync(guild=discord.Object(id=server_id))
         print("The bot has successfully started.")
         print(SYS_PIT_DIR_PATH)
+        print(CWD_PATH)
 
 @bot.event
 async def on_member_join(member):
