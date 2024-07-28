@@ -1,6 +1,7 @@
 BACKUP_DIR=/home/issjbrfs/swagbot2-run-dir/old-versions
 INSTALL_DIRECTORY=/home/issjbrfs/swagbot2-run-dir
 SYSTEM_LOGS_DIR="/home/issjbrfs/swagbot2-run-dir/pitroles"
+MISC_DIR=misc
 SRCS=bot.py
 SRCS_TEST=bot_test.py
 DATETIME := $(shell date +"%Y-%m-%d_%H-%M-%S")
@@ -21,6 +22,7 @@ tests:
 install:
 	mv $(INSTALL_DIRECTORY)/bot.py $(BACKUP_DIR)/$(BAK_TARGET)
 	cp $(SRCS) $(INSTALL_DIRECTORY)/
+	cp -r $(MISC_DIR) $(INSTALL_DIRECTORY)/
 	@TOKEN=$(shell cat tmptoken) && \
 	sed -i.bak "s/YOUR TOKEN HERE/$${TOKEN}/g" $(INSTALL_DIRECTORY)/$(SRCS)
 	@COMMIT_HASH=$(shell git rev-parse HEAD) && \
