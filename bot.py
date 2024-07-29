@@ -553,4 +553,40 @@ async def bill(interaction: discord.Interaction, title: str, description: str):
 		await interaction.response.send_message("You have no permission to do this!", ephemeral=True)
 	return
 
+@tree.command(
+	name="say-the-line-soyjak",
+	description="Make Soyjak say the line!", #additional variants possibly coming soon !
+	guild=discord.Object(id=server_id)
+)
+async def saytheline(interaction: discord.Interaction, text: str, soyjak: Literal["Markiplier", "Impish Swede", "Cobson"] = ""):
+	n = 30 #Line length
+	if len(text) < n:
+		textbubble = str('```/' + "="*(len(text) + 2) + "\ \n| " + text + " |\n\\" + "="*(len(text) + 2) + '/' + '\n')
+	else:
+		textList = [text[i:i+n] for i in range(0, len(text), n)]
+		for a in range(len(textList)):
+			if a != len(textList)-1:
+				if textList[a][n-1].lower() in "abcdefghijklmnopqrstuvwxyz0123456789" and textList[a+1][0].lower() in "abcdefghijklmnopqrstuvwxyz0123456789":
+					textList[a] += "-" #breaks up text if cut in the middle of a wo-
+			if textList[a][0] == " ":          #rd
+				textList[a] = textList[a][1:] #removes spaces from the start
+		textbubble = str("```\n" + "/" + "="*(n + 2) + "\ ")
+		for t in textList:
+			textbubble += str("\n| " + t + " "*(n + 1 -len(t)) + "|")
+		textbubble += str(" \n\\=" + "="*(n + 1) + "/ \n")
+                
+	if soyjak == "Impish Swede":
+		soyjakTemp = str("       \  \n     .___.  .__________.      .--.  \n    //---\\\/            '-___/ /'\\\ \n    || & |/ (|).- ( |)      ' |,  || \n    .----'    / _,             & // \n   /         (o o)           \  // \n .|   /                       '-'|- \n +|  |                  |        |= \n .|- | '-._________.--' |       -/. \n  :\:|    '-+-+-+-'     |      &/-  \n   -\.      ---        /      %/#   \n    *\                    =. */#,    \n     %\ ,               ./+ ./#-   \n   __-@\*\,            :/- :/=__ \n /    -%\*\-,#.,%%#&,.+/..*/:    \ \n/     -%:\='=========='-%=/,      \ \n        -@\.#;&%##+&#+=#+/%         \n           \____________/&          \n            #%&&#'+%#&%#'               ```")
+	elif soyjak == "Cobson":
+		soyjakTemp = str("       \  \n       ____----------____   \n      /                  \         \n     /                    \        \n    /                      \       \n   |                        \      \n   |        ;     .::::::.   \     \n   |.....       .::'===='::=''|    \n .=:::::::;=_--_/  .----.  |  |    \n || .---.::/    |  \(0)_/  |  |    \n \| \(0)/ /      \________/    |   \n  '------/                     |   \n  |     |                       |  \n  |      \           \          |. \n  |      :\@   @@     \        ,|: \n %|+     :             \       ;|% \n &|-    |   .-------.   \      %|& \n  #\.   |  /\_|_|_|_|_\  \     .|% \n   .\+  |  |           \  \    +|: \n    =\- |  \            \  |   :/-_\n___--*\:|   \ _        _|  |  +/.  \n      +\:\   \\\______//     -/+   \n       &\#-   '-'-'-'-'     ;/*    \n        *\.   #&#%%#;##&   %/+.    \n         #\:-#%&;##,.:=#-,;/#:     \n          &'--------------'#:      \n           *#%&&;#%&#&%%%#**       \n```")
+	else:
+		soyjakTemp = str("       \  \n         _________________       \n        /                 \         \n       /   ~------\___     \       \n      /    ____/¨¨¨`----    \       \n     /  ______        _____  \       \n    /  /      \      /     \  \     \n   /===========.   .===========\     \n   ||   .----. |/-\| .----.   ||         \n   ||   \_()_/ |   | \_()_/   ||         \n   |\==========/    \=========/|         \n   |          /      \         |         \n   |         |        |        |          \n   |          \_°   °_/        |         \n   |                            \         \n  ,/*    .   _______    __      ;\*        \n %|+=:  /   / | | |-\___  \     %/&        \n  *\*:  \  / \|-+-+_|_|.\ |    +/.         \n   %\+-*  |             | |   ;/`          \n    #\--= |             |   +#/+          \n__--*#\:*  \            |  -%/.#--__   \n     '*\+.  \          /  -#/%            \n     +=*\.,  \        /   #/*:              \n       *@\;+  \______/   &/&#            \n        %*\.;:*%:-+?;,#%./*+            \n         *+\____________/&               \n          %*#*%*%%˝*##!*%                ```")
+	if len(textbubble + soyjakTemp) <= 2000:       
+		await interaction.response.send_message(textbubble + soyjakTemp)
+	else:
+		words = "words words words words words" #portrays YOU as the soyjak if you try and post a message that is too long
+		textbubble = str('```/' + "="*(len(words) + 2) + "\ " + ("\n| " + words + " |")*10 + "\n\\" + "="*(len(words) + 2) + '/' + '\n')
+		await interaction.response.send_message(textbubble + soyjakTemp)
+
+		
 bot.run(TOKEN)
