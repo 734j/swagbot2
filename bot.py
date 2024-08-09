@@ -539,7 +539,7 @@ class Buttons(discord.ui.View):
     description="Make a congress bill",
     guild=discord.Object(id=server_id)
 )
-async def bill(interaction: discord.Interaction, title: str, description: str):
+async def bill(interaction: discord.Interaction, title: str, description: str = ""):
 	user = interaction.user
 	guild = bot.get_guild(server_id)
 	view = Buttons(title, description, user)
