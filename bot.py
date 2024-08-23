@@ -585,6 +585,14 @@ async def bill(interaction: discord.Interaction, title: str, description: str = 
 	guild=discord.Object(id=server_id)
 )
 async def saytheline(interaction: discord.Interaction, text: str, soyjak: Literal["Markiplier", "Impish Swede", "Cobson"] = ""):
+
+	if await WordFilterCheck(text) == True:
+		await interaction.response.send_message(f"WTF DID YOU JUST SAY?????", ephemeral=True)
+		channel = bot.get_channel(channel_blockedmessages)
+		BadUser = interaction.user
+		await channel.send(f"{BadUser.mention} ({BadUser.id}) tried to send a message with banned words using /say-the-line-soyjak\nFull message: \n\"{text}\"") 
+		return
+
 	n = 30 #Line length
 	if len(text) < n:
 		textbubble = str('```/' + "="*(len(text) + 2) + "\ \n| " + text + " |\n\\" + "="*(len(text) + 2) + '/' + '\n')
