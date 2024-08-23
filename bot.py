@@ -175,8 +175,8 @@ async def ver(interaction: discord.Interaction):
     await interaction.response.send_message(f"Version: {COMMIT}")
 
 @tree.command(name="length", description="Convert cm to feet and vica versa", guild=discord.Object(id=server_id))	
-@app_commands.describe(value="Value of length", system="The measurement system used for the value parameter. Options: cm, in, m, ft (Case sensitive)")
-async def calculate(interaction: discord.Interaction, value: str, system: str):
+@app_commands.describe(value="Value of length", system="The measurement system used for the value parameter.")
+async def calculate(interaction: discord.Interaction, value: str, system: Literal["cm","in","ft","m"]):
     try:
         if "'" not in value or system != "ft":
                 number = float(value)
@@ -219,8 +219,8 @@ async def calculate(interaction: discord.Interaction, value: str, system: str):
     description="Convert kelvin, fahrenheit and celsius.",
     guild=discord.Object(id=server_id)
 )
-@app_commands.describe(value="Value", system="The system that you inputted the value in. Options: k, c, f. (Case sensitive)")
-async def calc(interaction: discord.Interaction, value: str, system: str):
+@app_commands.describe(value="Value", system="The system that you inputted the value in.")
+async def calc(interaction: discord.Interaction, value: str, system: Literal["k", "c", "f"]):
     try:
         number = float(value)
         embed = discord.Embed(title="Calculation Result", color=discord.Color.yellow())
@@ -565,7 +565,7 @@ class Buttons(discord.ui.View):
     description="Make a congress bill",
     guild=discord.Object(id=server_id)
 )
-async def bill(interaction: discord.Interaction, title: str, description: str):
+async def bill(interaction: discord.Interaction, title: str, description: str = ""):
 	user = interaction.user
 	guild = bot.get_guild(server_id)
 	view = Buttons(title, description, user)
