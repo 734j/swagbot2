@@ -24,6 +24,7 @@ intents.members = True
 COMMIT = 'TESTING_VERSION'
 TOKEN = 'YOUR TOKEN HERE'
 SYS_PIT_DIR_PATH = "YOUR LOG PATH"
+SYS_BADWORDS_DIR_PATH = "YOUR BAD WORDS PATH"
 bot = commands.Bot(command_prefix="(", intents=intents)
 tree = bot.tree
 
@@ -36,6 +37,7 @@ channel_pplofthepit = 1243174332293976095
 channel_pit = 1057343199888285786
 channel_announcments = 1263195223803035668
 channel_senate = 1241499601450827897
+channel_blockedmessages = 1105231511512424508
 
 #Roles
 role_admin = 938787942657327114
@@ -432,6 +434,22 @@ async def roulette(interaction: discord.Interaction, pit: Literal["YUP!"] = "", 
 		elif pit != "YUP!" or pit != "" or russian != "blanks" or russian != "kick":
 			await interaction.response.send_message("Erm... invalid input!")
 
+async def WordFilterCheck(FullText: str):
+        
+        ListPath = SYS_BADWORDS_DIR_PATH+"/list"
+        WordsList = open(ListPath, "r").read().splitlines()
+        LowerFullText = FullText.lower()
+        print(f"User string: {LowerFullText}")
+        print(f"Banned words:\n{WordsList}")
+        for WL in WordsList:
+                if LowerFullText.find(WL) < 0:
+                        print(f"{WL} OK")
+                else:
+                        print(f"Bad word found: {WL}")
+                        return True
+
+        return False
+
 @tree.command(
 	name="cowsay",
 	description="The iconic CLI tool now on Discord!",
@@ -439,6 +457,14 @@ async def roulette(interaction: discord.Interaction, pit: Literal["YUP!"] = "", 
 )
 @app_commands.describe(dotcow="Load a different cowfile")
 async def cow(interaction: discord.Interaction, text: str, dotcow: Literal["blowfish", "small", "kitty", "bong", "supermilker"] = ""):
+
+        if await WordFilterCheck(text) == True:
+                await interaction.response.send_message(f"WTF DID YOU JUST SAY?????", ephemeral=True)
+                channel = bot.get_channel(channel_blockedmessages)
+                BadUser = interaction.user
+                await channel.send(f"{BadUser.mention} ({BadUser.id}) tried to send a message with banned words using /cowsay\nFull message: \n\"{text}\"") 
+                return
+        
         if len(text) > 70:
                 await interaction.response.send_message(f"You cannot exceed 70 characters.", ephemeral=True)
         elif len(text) <= 70 and dotcow == "":
