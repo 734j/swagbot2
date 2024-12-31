@@ -61,7 +61,7 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
         channel = bot.get_channel(channel_joinleave)
-        await channel.send(f"{member.mention} ({member}) joined the server!\nhttps://tenor.com/view/snsdmongus-dog-sideye-gif-21272558")
+        await channel.send(f"{member.mention} ({member}) ({member.id}) joined the server!\nhttps://tenor.com/view/snsdmongus-dog-sideye-gif-21272558")
 
 @bot.event
 async def on_member_remove(member):
@@ -490,13 +490,8 @@ async def loto(interaction: discord.Interaction):
     user = interaction.user
     if not interaction.user.guild_permissions.manage_roles:
         if rng == 43662:
-            await interaction.response.send_message("https://i.postimg.cc/R0z661Qz/ezgif-2-d2c71cd8c607.gif")
-            time.sleep(3)
-            await interaction.followup.send("# 🚨🚨🚨 YOU HAVE WON THE MOD LOTTO! 🚨🚨🚨")
-            mod = discord.Object(id=role_mod)
-            await user.add_roles(mod)
-            channel = bot.get_channel(channel_announcments)
-            await channel.send(f"# 🚨🚨🚨 ALERT 🚨🚨🚨\n### {interaction.user.mention} has rolled a ONE IN FIVE HUNDRED THOUSAND chance (0.0002%) and WON THE MOD LOTTO!") 
+            rng += 1
+            await interaction.response.send_message(f"Aw dang it! You rolled {rng}, but the winning number is 43662. Try again!")
         elif rng == 214:
             await interaction.response.send_message("https://i.postimg.cc/R0z661Qz/ezgif-2-d2c71cd8c607.gif")
             time.sleep(3)
