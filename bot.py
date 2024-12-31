@@ -161,7 +161,7 @@ async def unswag(interaction: discord.Interaction, user: discord.Member):
         if interaction.user.guild_permissions.manage_roles:
             ylwrole = discord.Object(id=role_swagballer)
             newgenrole = discord.Object(id=role_newgen)
-            await user.remove_roles(ylwrole
+            await user.remove_roles(ylwrole)
             await user.add_roles(newgenrole)
             await interaction.response.send_message(f"{user.mention} had their swag privilleges revoked.")
         else:
