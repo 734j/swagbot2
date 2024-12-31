@@ -50,6 +50,7 @@ role_member = 938804320026099742
 role_swagballer = 1003732468370776125
 role_anyone = 1263879103803687046
 role_senator = 1241473032036417648
+role_newgen = 1323689803035840585
 	
 @bot.event
 async def on_ready():
@@ -66,7 +67,7 @@ async def on_member_join(member):
 @bot.event
 async def on_member_remove(member):
         channel = bot.get_channel(channel_joinleave)
-        await channel.send(f"{member.mention} ({member}) left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
+        await channel.send(f"{member.mention} ({member}) (member.id) left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
 
 #@anyone
 @bot.event
@@ -124,7 +125,9 @@ async def swag(interaction: discord.Interaction, user: discord.Member):
     try:
         if interaction.user.guild_permissions.manage_roles:
             ylwrole = discord.Object(id=role_swagballer)
+            newgenrole = discord.Object(id=role_newgen)
             await user.add_roles(ylwrole)
+            await user.remove_roles(newgenrole)
             await interaction.response.send_message(f"{user.mention} is now a swagballer!!!!!!!!!!!!!!!")
         else:
             await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
@@ -157,7 +160,9 @@ async def unswag(interaction: discord.Interaction, user: discord.Member):
     try:
         if interaction.user.guild_permissions.manage_roles:
             ylwrole = discord.Object(id=role_swagballer)
-            await user.remove_roles(ylwrole)
+            newgenrole = discord.Object(id=role_newgen)
+            await user.remove_roles(ylwrole
+            await user.add_roles(newgenrole)
             await interaction.response.send_message(f"{user.mention} had their swag privilleges revoked.")
         else:
             await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
