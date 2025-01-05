@@ -67,7 +67,7 @@ async def on_member_join(member):
 @bot.event
 async def on_member_remove(member):
         channel = bot.get_channel(channel_joinleave)
-        await channel.send(f"{member.mention} ({member}) (member.id) left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
+        await channel.send(f"{member.mention} ({member}) ({member.id}) left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
 
 #@anyone
 @bot.event
