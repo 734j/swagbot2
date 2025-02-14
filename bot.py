@@ -62,12 +62,12 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
         channel = bot.get_channel(channel_joinleave)
-        await channel.send(f"{member.mention} ({member}) ({member.id}) joined the server!\nhttps://tenor.com/view/snsdmongus-dog-sideye-gif-21272558")
+        await channel.send(f"{member.mention} `{member}` `{member.id}` joined the server!\nhttps://tenor.com/view/snsdmongus-dog-sideye-gif-21272558")
 
 @bot.event
 async def on_member_remove(member):
         channel = bot.get_channel(channel_joinleave)
-        await channel.send(f"{member.mention} ({member}) ({member.id}) left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
+        await channel.send(f"{member.mention} `{member}` `{member.id}` left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
 
 #@anyone
 @bot.event
@@ -280,6 +280,7 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
     bot_member = interaction.guild.get_member(bot.user.id)
     bot_top_role = bot_member.top_role
     user_top_role = user.top_role
+    pitted_gif = "https://cdn.discordapp.com/attachments/938739040667201536/1340065789033709730/copy_7C870B9C-E3BA-4575-8CCF-9FB778977AED.gif?ex=67b10105&is=67afaf85&hm=173643969836e2ebffaf200e37640501f6926bda04acde0f6ca7b0d2b4489b76&"
 
     if bot_top_role <= user_top_role:
         await interaction.response.send_message("I do not have permission to modify roles for this user.", ephemeral=True)
@@ -289,15 +290,15 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
         pit = bot.get_channel(channel_pit)
         if interaction.user.guild_permissions.manage_roles and reason != "":
             await generic_pit(interaction, user)
-            await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
+            await interaction.response.send_message(f"{user.mention} has been pitted.\n{pitted_gif}")
             channel = bot.get_channel(channel_pplofthepit)
-            await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
-            await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for {reason}.")
+            await user.send(f'You have been pitted in 69SwagBalls420 cord for reason: {reason}.')
+            await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for reason: {reason}.")
             await pit.send (f"A loud thud shakes the depths of the Pit as {user.mention} ({user}) falls to the ground... Welcome your new friend.")
         elif interaction.user.guild_permissions.manage_roles and reason == "":
             await generic_pit(interaction, user)
             channel = bot.get_channel(channel_pplofthepit)
-            await interaction.response.send_message(f"{user.mention} has been pitted.\nhttps://media.discordapp.net/attachments/1091036967199834112/1129035100915511376/attachment.gif")
+            await interaction.response.send_message(f"{user.mention} has been pitted.\n{pitted_gif}")
             await user.send(f'You have been pitted in 69SwagBalls420 cord for undisclosed reasons.')
             await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for unknown reasons! :DEVIL:")
             await pit.send (f"A loud thud shakes the depths of the Pit as {user.mention} ({user}) falls to the ground... Welcome your new friend.")
