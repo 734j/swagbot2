@@ -1,3 +1,10 @@
+import tariff
+
+tariff.set({
+	"cowsay": 80, # 80% tariff on cowsay
+	"discord": 20, # 20% tariff on discord 
+})
+
 from discord import app_commands
 from discord.utils import get # New import
 from discord.ext import commands
