@@ -485,29 +485,6 @@ async def cow(interaction: discord.Interaction, text: str, dotcow: Literal["blow
                 await interaction.response.send_message(f"```{cowsay(text.strip(), cowfile=cowfiles.bong)}```")
         elif len(text) <= 70 and dotcow == "supermilker":
                 await interaction.response.send_message(f"```{cowsay(text.strip(), cowfile=cowfiles.supermilker)}```")
-        
-@tree.command(
-    name="mod-lottery",
-    description="Have a 1 in 500000 chance to get mod perms!",
-    guild=discord.Object(id=server_id)
-)
-async def loto(interaction: discord.Interaction):
-    rng = randint(1, 500000)
-    user = interaction.user
-    if not interaction.user.guild_permissions.manage_roles:
-        if rng == 43662:
-            rng += 1
-            await interaction.response.send_message(f"Aw dang it! You rolled {rng}, but the winning number is 43662. Try again!")
-        elif rng == 214:
-            await interaction.response.send_message("https://i.postimg.cc/R0z661Qz/ezgif-2-d2c71cd8c607.gif")
-            time.sleep(3)
-            await interaction.followup.send("yep sorry for edging you buddy you lost actually, try again")
-            time.sleep(1)
-            await interaction.followup.send(f"Aw dang it! You rolled 214, but the winning number is 43662. Try again!")
-        else:
-            await interaction.response.send_message(f"Aw dang it! You rolled {rng}, but the winning number is 43662. Try again!")
-    else:
-        await interaction.response.send_message("You are not eligible for the lottery!")        
 
 # SENATE BILLS
 
