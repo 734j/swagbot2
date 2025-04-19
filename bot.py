@@ -106,11 +106,8 @@ async def bye (interaction: discord.Interaction):
     description="swagifies a user",
     guild=discord.Object(id=server_id)
 )
+@app_commands.checks.has_permissions(manage_roles=True)
 async def swag(interaction: discord.Interaction, user: discord.Member):
-    if not interaction.user.guild_permissions.manage_roles:
-        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.")
-        return
-
     if user.guild_permissions.manage_roles:
         await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
         return
@@ -123,14 +120,11 @@ async def swag(interaction: discord.Interaction, user: discord.Member):
         return
 
     try:
-        if interaction.user.guild_permissions.manage_roles:
-            ylwrole = discord.Object(id=role_swagballer)
-            newgenrole = discord.Object(id=role_newgen)
-            await user.add_roles(ylwrole)
-            await user.remove_roles(newgenrole)
-            await interaction.response.send_message(f"{user.mention} is now a swagballer!!!!!!!!!!!!!!!")
-        else:
-            await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+        ylwrole = discord.Object(id=role_swagballer)
+        newgenrole = discord.Object(id=role_newgen)
+        await user.add_roles(ylwrole)
+        await user.remove_roles(newgenrole)
+        await interaction.response.send_message(f"{user.mention} is now a swagballer!!!!!!!!!!!!!!!")
     except discord.Forbidden:
             await interaction.response.send_message("403. I need to be higher in the role hiearchy.", ephemeral=True)
     except Exception as e:
@@ -141,11 +135,8 @@ async def swag(interaction: discord.Interaction, user: discord.Member):
     description="unswagifies a user",
     guild=discord.Object(id=server_id)
 )
+@app_commands.checks.has_permissions(manage_roles=True)
 async def unswag(interaction: discord.Interaction, user: discord.Member):
-    if not interaction.user.guild_permissions.manage_roles:
-        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.")
-        return
-
     if user.guild_permissions.manage_roles:
         await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
         return
@@ -158,14 +149,11 @@ async def unswag(interaction: discord.Interaction, user: discord.Member):
         return
 
     try:
-        if interaction.user.guild_permissions.manage_roles:
-            ylwrole = discord.Object(id=role_swagballer)
-            newgenrole = discord.Object(id=role_newgen)
-            await user.remove_roles(ylwrole)
-            await user.add_roles(newgenrole)
-            await interaction.response.send_message(f"{user.mention} had their swag privilleges revoked.")
-        else:
-            await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
+        ylwrole = discord.Object(id=role_swagballer)
+        newgenrole = discord.Object(id=role_newgen)
+        await user.remove_roles(ylwrole)
+        await user.add_roles(newgenrole)
+        await interaction.response.send_message(f"{user.mention} had their swag privilleges revoked.")
     except discord.Forbidden:
             await interaction.response.send_message("403. I need to be higher in the role hiearchy.", ephemeral=True)
     except Exception as e:
@@ -269,11 +257,8 @@ async def generic_pit(interaction, user): # Use this when pitting someone in ano
     guild=discord.Object(id=server_id)
 )
 @app_commands.describe(reason="Reason will be posted in the public logging channel.")
+@app_commands.checks.has_any_role(role_mod, role_admin)
 async def pit(interaction: discord.Interaction, user: discord.Member, reason: str = ""):
-    if not interaction.user.guild_permissions.manage_roles:
-        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.")
-        return
-
     if user.guild_permissions.manage_roles:
         await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
         return
@@ -288,14 +273,14 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
 
     try:
         pit = bot.get_channel(channel_pit)
-        if interaction.user.guild_permissions.manage_roles and reason != "":
+        if reason != "":
             await generic_pit(interaction, user)
             await interaction.response.send_message(f"{user.mention} has been pitted.\n{pitted_gif}")
             channel = bot.get_channel(channel_pplofthepit)
             await user.send(f'You have been pitted in 69SwagBalls420 cord for reason: {reason}.')
             await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for reason: {reason}.")
             await pit.send (f"A loud thud shakes the depths of the Pit as {user.mention} ({user}) falls to the ground... Welcome your new friend.")
-        elif interaction.user.guild_permissions.manage_roles and reason == "":
+	elif reason == "":
             await generic_pit(interaction, user)
             channel = bot.get_channel(channel_pplofthepit)
             await interaction.response.send_message(f"{user.mention} has been pitted.\n{pitted_gif}")
@@ -340,13 +325,9 @@ async def generic_unpit(interaction, user):
     description="unpits someone",
     guild=discord.Object(id=server_id)
 )
-
+@app_commands.checks.has_any_role(role_mod, role_admin)
 @app_commands.describe(reason="Reason will be posted in the public logging channel.")
 async def unpit(interaction: discord.Interaction, user: discord.Member, reason: str = ""):
-    if not interaction.user.guild_permissions.manage_roles:
-        await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.")
-        return
-
     if user.guild_permissions.manage_roles:
         await interaction.response.send_message("https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.", ephemeral=True)
         return
@@ -359,7 +340,7 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
         return
 
     try:
-        if interaction.user.guild_permissions.manage_roles and reason != "":
+        if reason != "":
             if await generic_unpit(interaction, user) == False:
                     return
             
@@ -367,7 +348,7 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
             channel = bot.get_channel(channel_pplofthepit) 
             await channel.send(f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for reason: {reason}")
             
-        elif interaction.user.guild_permissions.manage_roles and reason == "":
+        elif reason == "":
             if await generic_unpit(interaction, user) == False:
                     return
             await interaction.response.send_message(f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif")
@@ -385,7 +366,7 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
 	description="@someone with cooler features",
 	guild=discord.Object(id=server_id)
 )
-@app_commands.describe(pit="If random user shall be pitted.", russian="blanks for no kick and kick for kicking upon death")
+@app_commands.describe(pit="If a random user shall be pitted.", russian="blanks for no kick and kick for kicking upon death")
 async def roulette(interaction: discord.Interaction, pit: Literal["YUP!"] = "", russian: Literal["kick", "blanks"] = ""):
 	guild = bot.get_guild(server_id)
 	channel = bot.get_channel(channel_pplofthepit)
