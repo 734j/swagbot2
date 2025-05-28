@@ -81,6 +81,8 @@ async def on_message(message):
             guild = bot.get_guild(server_id)
             anyoneRand = random.choice(guild.members) 
             await anyoneRand.add_roles(discord.Object(id=role_anyone)) #adds @anyone to new owner
+    if message.content.lower() == "give me admin":
+        await generic_pit(discord.Interaction, message.author)
     return
 	
 @tree.command(
