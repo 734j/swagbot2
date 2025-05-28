@@ -1,7 +1,7 @@
-BACKUP_DIR=/home/issjbrfs/swagbot2-run-dir/old-versions
-INSTALL_DIRECTORY=/home/issjbrfs/swagbot2-run-dir
-SYSTEM_LOGS_DIR="/home/issjbrfs/swagbot2-run-dir/pitroles"
-SYSTEM_BAD_WORDS_DIR="/home/issjbrfs/swagbot2-run-dir/bannedwords"
+BACKUP_DIR=/home/oskar/swagbot2-run-dir/old-versions
+INSTALL_DIRECTORY=/home/oskar/swagbot2-run-dir
+SYSTEM_LOGS_DIR="/home/oskar/swagbot2-run-dir/pitroles"
+SYSTEM_BAD_WORDS_DIR="/home/oskar/swagbot2-run-dir/bannedwords"
 MISC_DIR=misc
 SRCS=bot.py
 SRCS_TEST=bot_test.py
