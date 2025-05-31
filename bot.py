@@ -7,6 +7,7 @@ import discord
 import random
 import time
 from typing import Literal
+from discord import AllowedMentions
 
 #Cowsay
 # pip install python-cowsay
@@ -567,7 +568,7 @@ async def sen_update(interaction: discord.Interaction, senate_number: int, curre
 	return
 
 class Buttons(discord.ui.View):
-	def __init__(self, title, description, user, *, message=None, timeout=86400): #Ball is active for 24 hours
+	def __init__(self, title, description, user, *, message=None, timeout=43200): #Ball is active for 12 hours after last vote
 		super().__init__(timeout=timeout)
 		guild = bot.get_guild(server_id)
 		self.senators = guild.get_role(role_senator).members #Senator list
@@ -577,23 +578,6 @@ class Buttons(discord.ui.View):
 		self.votes = [0]*len(self.senators) #Script saves the votes of each senator here
 		self.message = message 
 		
-	async def update_votes(self):  # Updates ball embed, allows to show current vote status without clutter
-		cur_votes = ""
-		for i in range(len(self.senators)):
-			vote = self.votes[i] if self.votes[i] != 0 else "⬜"  # default abstain symbol
-			cur_votes += f"{vote}{self.senators[i].mention}\n"
-
-		new_embed = discord.Embed(
-		title=self.title,
-		description=self.description,
-		color=discord.Color.yellow()
-		)
-		new_embed.add_field(name="Ball Sponsor", value=self.user.mention, inline=True)
-		new_embed.add_field(name="Ball description", value=self.description)
-		new_embed.add_field(name="Current Votes", value=cur_votes)
-
-		await self.message.edit(embed=new_embed, view=self)
-		
 	@discord.ui.button(label="🟩",style=discord.ButtonStyle.green)
 	async def yay(self,interaction:discord.Interaction, button:discord.ui.Button):
 		user = interaction.user
@@ -602,7 +586,6 @@ class Buttons(discord.ui.View):
 			# await interaction.response.send_message(f"{interaction.user.mention} has voted YAY!")
 			await interaction.response.send_message("You voted YAY!", ephemeral=True)
 			self.votes[self.senators.index(user)] = "🟩"
-			await self.update_votes()
 		else:
 			await interaction.response.send_message("You cannot vote!", ephemeral=True)
 		return
@@ -614,7 +597,6 @@ class Buttons(discord.ui.View):
 			# await interaction.response.send_message(f"{interaction.user.mention} has ABSTAINED!")
 			await interaction.response.send_message("You voted ABSTAIN!", ephemeral=True)
 			self.votes[self.senators.index(user)] = "⬜"
-			await self.update_votes()
 		else:
 			await interaction.response.send_message("You cannot vote!", ephemeral=True)
 		return    
@@ -626,21 +608,49 @@ class Buttons(discord.ui.View):
 			# await interaction.response.send_message(f"{interaction.user.mention} has voted NAY!")
 			await interaction.response.send_message("You voted NAY!", ephemeral=True)
 			self.votes[self.senators.index(user)] = "🟥"
-			await self.update_votes()
 		else:
 			await interaction.response.send_message("You cannot vote!", ephemeral=True)
 		return
                         
 	async def on_timeout(self): #Once 24 hours pass, results are displayed in the Senate
 
+		for button in self.children:
+			button.disabled = True 
 		
 		self.votes_yay = self.votes.count("🟩")
 		self.votes_abstain = self.votes.count("⬜") + self.votes.count(0)
 		self.votes_nay = self.votes.count("🟥")
-		print("The voting period has ended.")
-		for button in self.children:
-			button.disabled = True 
-		await bot.get_channel(channel_senate).send(f"# Voting for the following ball has ended:\n## {self.title}\n### Sponsored by Senator {self.user}\n {self.description}\n**YAY:** {self.votes_yay}\n**NAY:** {self.votes_nay}\n**ABSTAIN:** {self.votes_abstain}")
+
+		if self.votes_yay > self.votes_nay:
+			new_embed = discord.Embed(color=discord.Color.green())
+		elif self.votes_yay < self.votes_nay:
+			new_embed = discord.Embed(color=discord.Color.red())
+		else:
+			new_embed = discord.Embed(color=discord.Color.greyple()) #le heckin quirky discord XDDDDD
+
+		cur_votes = ""
+		for i in range(len(self.senators)):
+			if self.votes[i] == "🟩": #lists all YAY votes
+				vote = "🟩"
+				cur_votes += f"{vote}{self.senators[i].mention}\n"
+		new_embed.add_field(name="YAY", value=cur_votes)
+
+		cur_votes = ""
+		for i in range(len(self.senators)):
+			if self.votes[i] == "🟥": #lists all NAY votes
+				vote = "🟥"
+				cur_votes += f"{vote}{self.senators[i].mention}\n"
+		new_embed.add_field(name="NAY", value=cur_votes)
+
+		cur_votes = ""
+		for i in range(len(self.senators)): #lists all ABSTAIN votes
+			if self.votes[i] == "⬜" or self.votes[i] == 0: # default abstain symbol
+				vote = "⬜"
+				cur_votes += f"{vote}{self.senators[i].mention}\n"
+		new_embed.add_field(name="ABSTAIN", value=cur_votes)
+		
+		await bot.get_channel(channel_senate).send(f"# Voting for the following ball has ended:\n## {self.title}\n### Sponsored by Senator {self.user}\n {self.description}\n", embed=new_embed)
+		
 		return
 
 @tree.command(
@@ -648,7 +658,7 @@ class Buttons(discord.ui.View):
     description="Make a parliament ball.",
     guild=discord.Object(id=server_id)
 )
-async def ball(interaction: discord.Interaction, title: str, description: str = ""):
+async def ball(interaction: discord.Interaction, title: str, description: str = "", ping: Literal["Yes", "No"] = ""):
 	global ball_number
 	global senate_no
 	
@@ -664,20 +674,20 @@ async def ball(interaction: discord.Interaction, title: str, description: str = 
 		embed.add_field(name="Ball Sponsor", value=user.mention, inline=True)
 		embed.add_field(name="Ball description", value=description)
 		cur_votes = ""
-		sens = guild.get_role(role_senator).members
-		for s in sens: #shows how each senator has voted currently
-			cur_votes += f"⬜{s.mention}\n" 
-		embed.add_field(name="Current Votes", value=cur_votes)
 		
 		view = Buttons(title, description, user)
-		message = await interaction.response.send_message(embed=embed, view=view)
+		if ping == "Yes":
+			message = await interaction.response.send_message(f"{guild.get_role(role_senator).mention}", embed=embed, view=view, allowed_mentions=AllowedMentions(roles=True))
+		else:
+			message = await interaction.response.send_message(embed=embed, view=view) 
 		view.message = await interaction.original_response()
 		ball_number += 1
 		await view.wait()
 	else:
 		await interaction.response.send_message("You have no permission to do this!", ephemeral=True)
 	return
-	
+
+# SAY THE LINE SOYJAK
 @tree.command(
 	name="say-the-line-soyjak",
 	description="Make Soyjak say the line!", #additional variants possibly coming soon !
