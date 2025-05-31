@@ -18,6 +18,8 @@ tests:
 	cp $(SRCS) test/$(SRCS_TEST)
 	@TOKEN=$(shell cat tmptoken) && \
 	sed -i.bak "s/YOUR TOKEN HERE/$${TOKEN}/g" test/$(SRCS_TEST)
+	@COMMIT_HASH=$(shell git rev-parse HEAD) && \
+	sed -i.bak "s/TESTING_VERSION/TESTING_VERSION ($${COMMIT_HASH})/g" test/$(SRCS_TEST)
 	sed -i "s#YOUR LOG PATH#$(SYSTEM_LOGS_DIR)#g" test/$(SRCS_TEST)
 	sed -i "s#YOUR BAD WORDS PATH#$(SYSTEM_BAD_WORDS_DIR)#g" test/$(SRCS_TEST)
 

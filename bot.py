@@ -62,6 +62,7 @@ async def on_ready():
         print("The bot has successfully started.")
         print(SYS_PIT_DIR_PATH)
         print(CWD_PATH)
+        print(f"On version: {COMMIT}")
 
 @bot.event
 async def on_member_join(member):
@@ -177,6 +178,33 @@ async def unswag(interaction: discord.Interaction, user: discord.Member):
     except Exception as e:
             await interaction.response.send_message(f"An unexpected error occurred: {str(e)}", ephemeral=True)
 
+
+@tree.command(
+        name="exchange-randomizer",
+        description="exchange randomizer",
+        guild=discord.Object(id=server_id)
+)
+@app_commands.describe(names="Put names in a comma separated list. Example: name1,name2,name3,name4")
+async def exchangerandomizer(interaction: discord.Interaction, names: str):
+        user = interaction.user
+        guild = bot.get_guild(server_id)
+        if user not in guild.get_role(role_admin).members:
+                await interaction.response.send_message("You have insufficient permissions", ephemeral=True)
+                return
+        
+        message = ""
+        _names = names
+        _names = names.replace(',',' ')
+        participant_list = _names.split()
+        participant_count = len(participant_list)
+        length=len("RECOMMENDS ALBUM TO")
+        random.shuffle(participant_list)
+        
+        for i in range(participant_count):
+	        message += participant_list[i] + " -> " + participant_list[i-1] + "\n"
+        await interaction.response.send_message(f"```{message}```")
+                
+            
 @tree.command(
 	name="version",
 	description="bot version",
@@ -395,19 +423,15 @@ async def unpit(interaction: discord.Interaction, user: discord.Member, reason: 
 async def roulette(interaction: discord.Interaction, pit: Literal["YUP!"] = "", russian: Literal["kick", "blanks"] = ""):
 	guild = bot.get_guild(server_id)
 	channel = bot.get_channel(channel_pplofthepit)
-	# God give me strength
-	# UPD: I'm going to hang myself'
-	# UPD: we are so back
-	# UPD: BRO
 	if pit == "" and russian == "":
 		randoms = random.choice(guild.members)
 		while randoms.bot:
-			randoms = random.choice(guild.members) #randomly pick until user is NOT a bot
+			randoms = random.choice(guild.members)
 		await interaction.response.send_message(f"{randoms.mention} has won the roulette!")
 	elif pit == "YUP!" and russian == "" and interaction.user.guild_permissions.manage_roles:
 		randoms = random.choice(guild.members)
 		while randoms.bot:
-			randoms = random.choice(guild.members) #randomly pick until user is NOT a bot
+			randoms = random.choice(guild.members)
 		await generic_pit(interaction, randoms)
 		await interaction.response.send_message(f"{randoms.mention} has been drawn for the pitting! Congratulations!")
 		await randoms.send("You have been by random chosen to be pitted in SwagCord! You can be unpitted upon request.")
