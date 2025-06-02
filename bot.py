@@ -85,11 +85,11 @@ async def on_message(message):
         for role in message.role_mentions:
                 if role_anyone == role.id: #checks if @anyone pinged
                         for anyoneMemb in role.members:
-                        await anyoneMemb.remove_roles(discord.Object(id=role_anyone)) #removes @anyone from previous owner
+                                await anyoneMemb.remove_roles(discord.Object(id=role_anyone)) #removes @anyone from previous owner
 
-                guild = bot.get_guild(server_id)
-                anyoneRand = random.choice(guild.members) 
-                await anyoneRand.add_roles(discord.Object(id=role_anyone)) #adds @anyone to new owner
+                        guild = bot.get_guild(server_id)
+                        anyoneRand = random.choice(guild.members) 
+                        await anyoneRand.add_roles(discord.Object(id=role_anyone)) #adds @anyone to new owner
 
         if message.content.lower() == "give me admin":
                 await generic_pit(discord.Interaction, message.author)
@@ -134,7 +134,7 @@ async def swag(interaction: discord.Interaction, user: discord.Member):
         await interaction.response.send_message("I do not have permission to modify roles for this user.", ephemeral=True)
         return
 
-§    try:
+    try:
         if interaction.user.guild_permissions.manage_roles:
             ylwrole = discord.Object(id=role_swagballer)
             newgenrole = discord.Object(id=role_newgen)
