@@ -568,15 +568,32 @@ async def sen_update(interaction: discord.Interaction, senate_number: int, curre
 	return
 
 class Buttons(discord.ui.View):
-	def __init__(self, title, description, user, *, message=None, timeout=43200): #Ball is active for 12 hours after last vote
+	def __init__(self, title, description, user, *, message=None, timeout=43200): #Ball is active for 12 hours
 		super().__init__(timeout=timeout)
 		guild = bot.get_guild(server_id)
 		self.senators = guild.get_role(role_senator).members #Senator list
 		self.title = title
 		self.description = description
 		self.user = user
-		self.votes = [0]*len(self.senators) #Script saves the votes of each senator here
-		self.message = message 
+		self.votes = ["⬜"]*len(self.senators) #Script saves the votes of each senator here
+		self.message = message
+
+	async def update_votes(self):
+		channel_id = self.message.channel.id
+		message_id = self.message.id
+		self.channel = bot.get_channel(channel_id)
+		self.message = await self.channel.fetch_message(message_id)
+		
+		embedUpdate = discord.Embed(title=self.title, color=discord.Color.yellow())
+		embedUpdate.add_field(name="Ball Sponsor", value=self.user.mention, inline=True)
+		embedUpdate.add_field(name="Ball description", value=self.description)
+		cur_votes = ""
+		for i in range(len(self.senators)):
+			cur_votes += f"{self.votes[i]}{self.senators[i].mention}\n"
+		embedUpdate.add_field(name="Current votes", value=cur_votes)
+		
+		await self.message.edit(embed=embedUpdate)
+                
 		
 	@discord.ui.button(label="🟩",style=discord.ButtonStyle.green)
 	async def yay(self,interaction:discord.Interaction, button:discord.ui.Button):
@@ -586,6 +603,7 @@ class Buttons(discord.ui.View):
 			# await interaction.response.send_message(f"{interaction.user.mention} has voted YAY!")
 			await interaction.response.send_message("You voted YAY!", ephemeral=True)
 			self.votes[self.senators.index(user)] = "🟩"
+			await self.update_votes()
 		else:
 			await interaction.response.send_message("You cannot vote!", ephemeral=True)
 		return
@@ -597,6 +615,7 @@ class Buttons(discord.ui.View):
 			# await interaction.response.send_message(f"{interaction.user.mention} has ABSTAINED!")
 			await interaction.response.send_message("You voted ABSTAIN!", ephemeral=True)
 			self.votes[self.senators.index(user)] = "⬜"
+			await self.update_votes()
 		else:
 			await interaction.response.send_message("You cannot vote!", ephemeral=True)
 		return    
@@ -608,6 +627,7 @@ class Buttons(discord.ui.View):
 			# await interaction.response.send_message(f"{interaction.user.mention} has voted NAY!")
 			await interaction.response.send_message("You voted NAY!", ephemeral=True)
 			self.votes[self.senators.index(user)] = "🟥"
+			await self.update_votes()
 		else:
 			await interaction.response.send_message("You cannot vote!", ephemeral=True)
 		return
@@ -668,12 +688,16 @@ async def ball(interaction: discord.Interaction, title: str, description: str = 
 		title = "§" + str(senate_no) + "." + (3-len(str(ball_number)))*"0" + str(ball_number) + ": " + title
 	else:
 		title = "§" + str(senate_no) + "." + str(ball_number) + ": " + title
-	
-	if user in guild.get_role(role_senator).members:
+
+	sens = guild.get_role(role_senator).members
+	if user in sens:
 		embed = discord.Embed(title=title, color=discord.Color.yellow())
 		embed.add_field(name="Ball Sponsor", value=user.mention, inline=True)
 		embed.add_field(name="Ball description", value=description)
 		cur_votes = ""
+		for i in range(len(sens)):
+			cur_votes += f"⬜{sens[i].mention}\n"
+		embed.add_field(name="Current votes", value=cur_votes)
 		
 		view = Buttons(title, description, user)
 		if ping == "Yes":
@@ -681,12 +705,13 @@ async def ball(interaction: discord.Interaction, title: str, description: str = 
 		else:
 			message = await interaction.response.send_message(embed=embed, view=view) 
 		view.message = await interaction.original_response()
+		
 		ball_number += 1
 		await view.wait()
 	else:
 		await interaction.response.send_message("You have no permission to do this!", ephemeral=True)
 	return
-
+	
 # SAY THE LINE SOYJAK
 @tree.command(
 	name="say-the-line-soyjak",
