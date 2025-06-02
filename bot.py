@@ -9,8 +9,6 @@ import time
 from typing import Literal
 from discord import AllowedMentions
 
-#Cowsay
-# pip install python-cowsay
 from cowsay import cowsay
 from io import StringIO
 from cowsay import read_dot_cow, cowthink
@@ -67,29 +65,35 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
+
         channel = bot.get_channel(channel_joinleave)
         await channel.send(f"{member.mention} `{member}` `{member.id}` joined the server!\nhttps://tenor.com/view/snsdmongus-dog-sideye-gif-21272558")
 
 @bot.event
 async def on_member_remove(member):
+
         channel = bot.get_channel(channel_joinleave)
         await channel.send(f"{member.mention} `{member}` `{member.id}` left the server!\nhttps://media.discordapp.net/attachments/1096276589743972386/1096665886779261068/attachment.gif")
 
 #@anyone
 @bot.event
 async def on_message(message):
-    if message.author == bot.user: #bot doesn't reply to itself
+
+        if message.author == bot.user: #bot doesn't reply to itself
+                return
+
+        for role in message.role_mentions:
+                if role_anyone == role.id: #checks if @anyone pinged
+                        for anyoneMemb in role.members:
+                        await anyoneMemb.remove_roles(discord.Object(id=role_anyone)) #removes @anyone from previous owner
+
+                guild = bot.get_guild(server_id)
+                anyoneRand = random.choice(guild.members) 
+                await anyoneRand.add_roles(discord.Object(id=role_anyone)) #adds @anyone to new owner
+§
+        if message.content.lower() == "give me admin":
+                await generic_pit(discord.Interaction, message.author)
         return
-    for role in message.role_mentions:
-        if role_anyone == role.id: #checks if @anyone pinged
-            for anyoneMemb in role.members:
-                await anyoneMemb.remove_roles(discord.Object(id=role_anyone)) #removes @anyone from previous owner
-            guild = bot.get_guild(server_id)
-            anyoneRand = random.choice(guild.members) 
-            await anyoneRand.add_roles(discord.Object(id=role_anyone)) #adds @anyone to new owner
-    if message.content.lower() == "give me admin":
-        await generic_pit(discord.Interaction, message.author)
-    return
 	
 @tree.command(
 name='hello',
@@ -130,7 +134,7 @@ async def swag(interaction: discord.Interaction, user: discord.Member):
         await interaction.response.send_message("I do not have permission to modify roles for this user.", ephemeral=True)
         return
 
-    try:
+§    try:
         if interaction.user.guild_permissions.manage_roles:
             ylwrole = discord.Object(id=role_swagballer)
             newgenrole = discord.Object(id=role_newgen)
@@ -187,6 +191,7 @@ async def unswag(interaction: discord.Interaction, user: discord.Member):
 )
 @app_commands.describe(names="Put names in a comma separated list. Example: name1,name2,name3,name4")
 async def exchangerandomizer(interaction: discord.Interaction, names: str):
+
         user = interaction.user
         guild = bot.get_guild(server_id)
         if user not in guild.get_role(role_admin).members:
@@ -249,7 +254,7 @@ async def calculate(interaction: discord.Interaction, value: str, system: Litera
                         embed.add_field(name="Inches", value=round(number * 12, 2), inline=True)
                         embed.add_field(name="Centimeters", value=round(number * 30.48, 2), inline=True)
                         embed.add_field(name="Meters", value=round(number * 0.3048, 2), inline=True)
-        # https://preview.redd.it/zh4z7cem9kg51.png?auto=webp&s=90ff37f3925e3d8dfe41a88aafcf8f35a414d5b7
+        
         await interaction.response.send_message(embed=embed)
     except ValueError:
         await interaction.response.send_message("Invalid input! Please provide a valid number.")
@@ -369,7 +374,8 @@ async def generic_unpit(interaction, user):
         roles_list_objects = [discord.Object(id=role_id) for role_id in role_ids_int]
         await user.edit(roles=roles_list_objects)
         os.remove(full_path)
-            
+
+
 @tree.command(
     name="unpit",
     description="unpits someone",
