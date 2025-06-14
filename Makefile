@@ -1,7 +1,7 @@
-BACKUP_DIR=/home/issjbrfs/swagbot2-run-dir/old-versions
-INSTALL_DIRECTORY=/home/issjbrfs/swagbot2-run-dir
-SYSTEM_LOGS_DIR="/home/issjbrfs/swagbot2-run-dir/pitroles"
-SYSTEM_BAD_WORDS_DIR="/home/issjbrfs/swagbot2-run-dir/bannedwords"
+BACKUP_DIR=/home/oskar/swagbot2-run-dir/old-versions
+INSTALL_DIRECTORY=/home/oskar/swagbot2-run-dir
+SYSTEM_LOGS_DIR="/home/oskar/swagbot2-run-dir/pitroles"
+SYSTEM_BAD_WORDS_DIR="/home/oskar/swagbot2-run-dir/bannedwords"
 MISC_DIR=misc
 SRCS=bot.py
 SRCS_TEST=bot_test.py
@@ -18,6 +18,8 @@ tests:
 	cp $(SRCS) test/$(SRCS_TEST)
 	@TOKEN=$(shell cat tmptoken) && \
 	sed -i.bak "s/YOUR TOKEN HERE/$${TOKEN}/g" test/$(SRCS_TEST)
+	@COMMIT_HASH=$(shell git rev-parse HEAD) && \
+	sed -i.bak "s/TESTING_VERSION/TESTING_VERSION ($${COMMIT_HASH})/g" test/$(SRCS_TEST)
 	sed -i "s#YOUR LOG PATH#$(SYSTEM_LOGS_DIR)#g" test/$(SRCS_TEST)
 	sed -i "s#YOUR BAD WORDS PATH#$(SYSTEM_BAD_WORDS_DIR)#g" test/$(SRCS_TEST)
 
