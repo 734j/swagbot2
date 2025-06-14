@@ -20,10 +20,10 @@ import cowfiles
 
 intents = discord.Intents.all()
 intents.members = True
-COMMIT = 'TESTING_VERSION'
-TOKEN = 'YOUR TOKEN HERE'
-SYS_PIT_DIR_PATH = "YOUR LOG PATH"
-SYS_BADWORDS_DIR_PATH = "YOUR BAD WORDS PATH"
+COMMIT = '__VERSION__'
+TOKEN = '__YOUR_TOKEN__'
+SYS_PIT_DIR_PATH = "__YOUR_LOG_PATH__"
+SYS_BADWORDS_DIR_PATH = "__YOUR_BAD_WORDS_PATH__"
 bot = commands.Bot(command_prefix="(", intents=intents)
 tree = bot.tree
 
