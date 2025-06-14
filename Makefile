@@ -1,4 +1,4 @@
-BACKUP_DIR=/home/oskar/swagbot2-run-dir/old-versions
+BACKUP_DIR=/home/oskar/swagbot2-run-dir/old-versions # why is this hardcoded?
 INSTALL_DIRECTORY=/home/oskar/swagbot2-run-dir
 SYSTEM_LOGS_DIR="/home/oskar/swagbot2-run-dir/pitroles"
 SYSTEM_BAD_WORDS_DIR="/home/oskar/swagbot2-run-dir/bannedwords"
