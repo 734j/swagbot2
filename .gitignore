@@ -2,3 +2,4 @@ tmptoken
 bot_test.py
 bot_test.py.bak
 testcases-pit-restore-roles.txt
+misc/__pycache__
