@@ -24,14 +24,14 @@ import cowfiles
 intents = discord.Intents.all()
 intents.members = True
 COMMIT = "TESTING_VERSION"
-TOKEN = "MTM1NDUzMjM2OTcxMjgwODA3OA.GThsiM.9FY4gtN5sLuLdPWKEZKB0xwElQP6HdyOM3p9xg"
+TOKEN = "TOKEN HERE"
 SYS_PIT_DIR_PATH = "YOUR LOG PATH"
 SYS_BADWORDS_DIR_PATH = "YOUR BAD WORDS PATH"
 bot = commands.Bot(command_prefix="(", intents=intents)
 tree = bot.tree
 
 # Guild ID
-server_id = 1184200388665147484
+server_id = 938728183203758080
 
 # Channels
 channel_joinleave = 943602154428571708  # join and leave channel
