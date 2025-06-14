@@ -24,14 +24,14 @@ import cowfiles
 intents = discord.Intents.all()
 intents.members = True
 COMMIT = "TESTING_VERSION"
-TOKEN = "YOUR TOKEN HERE"
+TOKEN = "MTM1NDUzMjM2OTcxMjgwODA3OA.GWSUCZ.qm-S9wwAk_Yn3jZBgjM1svAibuwSyMujMWPwpM"
 SYS_PIT_DIR_PATH = "YOUR LOG PATH"
 SYS_BADWORDS_DIR_PATH = "YOUR BAD WORDS PATH"
 bot = commands.Bot(command_prefix="(", intents=intents)
 tree = bot.tree
 
 # Guild ID
-server_id = 938728183203758080
+server_id = 1184200388665147484 #938728183203758080
 
 # Channels
 channel_joinleave = 943602154428571708  # join and leave channel
@@ -137,90 +137,6 @@ async def hello(interaction: discord.Interaction):
 @tree.command(name="bye", description="baii", guild=discord.Object(id=server_id))
 async def bye(interaction: discord.Interaction):
     await interaction.response.send_message("baii... :(")
-
-
-# SWAGIFICATION
-
-
-@tree.command(
-    name="swagify", description="swagifies a user", guild=discord.Object(id=server_id)
-)
-@app_commands.checks.has_permissions(manage_roles=True)
-async def swag(interaction: discord.Interaction, user: discord.Member):
-    if user.guild_permissions.manage_roles:
-        await interaction.response.send_message(
-            "https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.",
-            ephemeral=True,
-        )
-        return
-    bot_member = interaction.guild.get_member(bot.user.id)
-    bot_top_role = bot_member.top_role
-    user_top_role = user.top_role
-
-    if bot_top_role <= user_top_role:
-        await interaction.response.send_message(
-            "I do not have permission to modify roles for this user.", ephemeral=True
-        )
-        return
-
-    try:
-        ylwrole = discord.Object(id=role_swagballer)
-        newgenrole = discord.Object(id=role_newgen)
-        await user.add_roles(ylwrole)
-        await user.remove_roles(newgenrole)
-        await interaction.response.send_message(
-            f"{user.mention} is now a swagballer!!!!!!!!!!!!!!!"
-        )
-    except discord.Forbidden:
-        await interaction.response.send_message(
-            "403. I need to be higher in the role hiearchy.", ephemeral=True
-        )
-    except Exception as e:
-        await interaction.response.send_message(
-            f"An unexpected error occurred: {str(e)}", ephemeral=True
-        )
-
-
-@tree.command(
-    name="unswagify",
-    description="unswagifies a user",
-    guild=discord.Object(id=server_id),
-)
-@app_commands.checks.has_permissions(manage_roles=True)
-async def unswag(interaction: discord.Interaction, user: discord.Member):
-    if user.guild_permissions.manage_roles:
-        await interaction.response.send_message(
-            "https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.",
-            ephemeral=True,
-        )
-        return
-    bot_member = interaction.guild.get_member(bot.user.id)
-    bot_top_role = bot_member.top_role
-    user_top_role = user.top_role
-
-    if bot_top_role <= user_top_role:
-        await interaction.response.send_message(
-            "I do not have permission to modify roles for this user.", ephemeral=True
-        )
-        return
-
-    try:
-        ylwrole = discord.Object(id=role_swagballer)
-        newgenrole = discord.Object(id=role_newgen)
-        await user.remove_roles(ylwrole)
-        await user.add_roles(newgenrole)
-        await interaction.response.send_message(
-            f"{user.mention} had their swag privilleges revoked."
-        )
-    except discord.Forbidden:
-        await interaction.response.send_message(
-            "403. I need to be higher in the role hiearchy.", ephemeral=True
-        )
-    except Exception as e:
-        await interaction.response.send_message(
-            f"An unexpected error occurred: {str(e)}", ephemeral=True
-        )
-
 
 @tree.command(
     name="exchange-randomizer",
