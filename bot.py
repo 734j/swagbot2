@@ -77,7 +77,6 @@ async def load_cog(interaction: discord.Interaction, extension: str):
 
 @bot.event
 async def on_ready():
-    await tree.sync(guild=discord.Object(id=server_id))
     print("The bot has successfully started.")
     print(SYS_PIT_DIR_PATH)
     print(CWD_PATH)
@@ -88,6 +87,7 @@ async def on_ready():
 
     await bot.load_extension(f"cogs.neps")
     print(f"Cog 'neps' loaded.")
+    await tree.sync(guild=discord.Object(id=server_id))
 
 
 @bot.event
