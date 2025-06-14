@@ -24,7 +24,7 @@ import cowfiles
 intents = discord.Intents.all()
 intents.members = True
 COMMIT = "TESTING_VERSION"
-TOKEN = "TOKEN HERE"
+TOKEN = "YOUR TOKEN HERE"
 SYS_PIT_DIR_PATH = "YOUR LOG PATH"
 SYS_BADWORDS_DIR_PATH = "YOUR BAD WORDS PATH"
 bot = commands.Bot(command_prefix="(", intents=intents)
@@ -58,6 +58,22 @@ role_newgen = 1323689803035840585
 ball_number = 1
 senate_no = 1
 
+@tree.command(name="load", description="DEBUG: load a cog", guild=discord.Object(id=server_id))
+@discord.app_commands.checks.has_permissions(manage_messages=True)
+async def load_cog(interaction: discord.Interaction, extension: str):
+    await bot.load_extension(f"cogs.{extension}")
+    await interaction.response.send_message(f"Cog '{extension}' loaded.")
+    await tree.sync(guild=discord.Object(id=server_id)) 
+    print(f"Cog '{extension}' has been loaded.")
+    
+@tree.command(name="unload", description="DEBUG: unload a cog", guild=discord.Object(id=server_id))
+@discord.app_commands.checks.has_permissions(manage_messages=True)
+async def load_cog(interaction: discord.Interaction, extension: str):
+    await bot.unload_extension(f"cogs.{extension}")
+    await interaction.response.send_message(f"Cog '{extension}' unloaded.")
+    await tree.sync(guild=discord.Object(id=server_id)) 
+    print(f"Cog '{extension}' has been unloaded.")
+
 
 @bot.event
 async def on_ready():
@@ -67,10 +83,12 @@ async def on_ready():
     print(CWD_PATH)
     print(f"On version: {COMMIT}")
 
+    await bot.load_extension(f"cogs.pit")
+    await interaction.response.send_message(f"Cog 'pit' loaded.")
+
 
 @bot.event
 async def on_member_join(member):
-
     channel = bot.get_channel(channel_joinleave)
     await channel.send(
         f"{member.mention} `{member}` `{member.id}` joined the server!\nhttps://tenor.com/view/snsdmongus-dog-sideye-gif-21272558"
@@ -364,189 +382,6 @@ async def calc(
         await interaction.response.send_message(embed=embed)
     except ValueError:
         await interaction.response.send_message("Invalid input")
-
-
-# PITTING SYSTEM
-async def generic_pit(
-    interaction, user
-):  # Use this when pitting someone in another function. Does not include reason.
-
-    user_id = str(user.id)  # gets user id
-    user_roles_ids = user.roles  # gets list of roles user has
-    list_len = len(user_roles_ids)
-    file = open(f"{SYS_PIT_DIR_PATH}/{user_id}", "w")
-    iterate = 0
-    while iterate < list_len:
-        file.write(
-            str(user_roles_ids[iterate].id) + "\n"
-        )  # write each role ID in to file
-        iterate = iterate + 1
-
-    file.close()
-    pit_role = discord.Object(id=role_pitted)  # pit role
-    await user.edit(roles=[pit_role])
-
-
-@tree.command(
-    name="pit", description="pits someone", guild=discord.Object(id=server_id)
-)
-@app_commands.describe(reason="Reason will be posted in the public logging channel.")
-@app_commands.checks.has_any_role(role_mod, role_admin)
-async def pit(interaction: discord.Interaction, user: discord.Member, reason: str = ""):
-    if user.guild_permissions.manage_roles:
-        await interaction.response.send_message(
-            "https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.",
-            ephemeral=True,
-        )
-        return
-    bot_member = interaction.guild.get_member(bot.user.id)
-    bot_top_role = bot_member.top_role
-    user_top_role = user.top_role
-    pitted_gif = "https://cdn.discordapp.com/attachments/938739040667201536/1340065789033709730/copy_7C870B9C-E3BA-4575-8CCF-9FB778977AED.gif?ex=67b10105&is=67afaf85&hm=173643969836e2ebffaf200e37640501f6926bda04acde0f6ca7b0d2b4489b76&"
-
-    if bot_top_role <= user_top_role:
-        await interaction.response.send_message(
-            "I do not have permission to modify roles for this user.", ephemeral=True
-        )
-        return
-
-    try:
-        pit = bot.get_channel(channel_pit)
-        if reason != "":
-            await generic_pit(interaction, user)
-            await interaction.response.send_message(
-                f"{user.mention} has been pitted.\n{pitted_gif}"
-            )
-            channel = bot.get_channel(channel_pplofthepit)
-            await user.send(
-                f"You have been pitted in 69SwagBalls420 cord for reason: {reason}."
-            )
-            await channel.send(
-                f"{user.mention} ({user}) was pitted by {interaction.user.mention} for reason: {reason}."
-            )
-            await pit.send(
-                f"A loud thud shakes the depths of the Pit as {user.mention} ({user}) falls to the ground... Welcome your new friend."
-            )
-        elif reason == "":
-            await generic_pit(interaction, user)
-            channel = bot.get_channel(channel_pplofthepit)
-            await interaction.response.send_message(
-                f"{user.mention} has been pitted.\n{pitted_gif}"
-            )
-            await user.send(
-                f"You have been pitted in 69SwagBalls420 cord for undisclosed reasons."
-            )
-            await channel.send(
-                f"{user.mention} ({user}) was pitted by {interaction.user.mention} for unknown reasons! :DEVIL:"
-            )
-            await pit.send(
-                f"A loud thud shakes the depths of the Pit as {user.mention} ({user}) falls to the ground... Welcome your new friend."
-            )
-        else:
-            await interaction.response.send_message(
-                "https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.",
-                ephemeral=True,
-            )
-    except discord.Forbidden:
-        await interaction.response.send_message(
-            "403. I need to be higher in the role hiearchy.", ephemeral=True
-        )
-    except Exception as e:
-        await interaction.response.send_message(
-            f"An unexpected error occurred: {str(e)}", ephemeral=True
-        )
-
-
-async def generic_unpit(interaction, user):
-
-    user_id = str(user.id)
-    file_list = os.listdir(f"{SYS_PIT_DIR_PATH}")
-    fl_len = len(file_list)
-    iterator = 0
-    found = False
-    while iterator < fl_len:
-        if user_id == file_list[iterator]:
-            found = True
-            break
-        iterator = iterator + 1
-
-    if found == False:
-        await interaction.response.send_message(
-            "Could not find role ID's, applying greenrole"
-        )
-        greenrole = discord.Object(id=role_member)
-        await user.edit(roles=[greenrole])
-        return False
-
-    full_path = SYS_PIT_DIR_PATH + "/" + file_list[iterator]
-    role_ids = open(full_path, "r").read().split("\n")
-    role_ids_int = [int(role_id) for role_id in role_ids if role_id.strip().isdigit()]
-    roles_list_objects = [discord.Object(id=role_id) for role_id in role_ids_int]
-    await user.edit(roles=roles_list_objects)
-    os.remove(full_path)
-
-
-@tree.command(
-    name="unpit", description="unpits someone", guild=discord.Object(id=server_id)
-)
-@app_commands.checks.has_any_role(role_mod, role_admin)
-@app_commands.describe(reason="Reason will be posted in the public logging channel.")
-async def unpit(
-    interaction: discord.Interaction, user: discord.Member, reason: str = ""
-):
-    if user.guild_permissions.manage_roles:
-        await interaction.response.send_message(
-            "https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.",
-            ephemeral=True,
-        )
-        return
-    bot_member = interaction.guild.get_member(bot.user.id)
-    bot_top_role = bot_member.top_role
-    user_top_role = user.top_role
-
-    if bot_top_role <= user_top_role:
-        await interaction.response.send_message(
-            "I do not have permission to modify roles for this user.", ephemeral=True
-        )
-        return
-
-    try:
-        if reason != "":
-            if await generic_unpit(interaction, user) == False:
-                return
-
-            await interaction.response.send_message(
-                f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif"
-            )
-            channel = bot.get_channel(channel_pplofthepit)
-            await channel.send(
-                f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for reason: {reason}"
-            )
-
-        elif reason == "":
-            if await generic_unpit(interaction, user) == False:
-                return
-            await interaction.response.send_message(
-                f"{user.mention}, who crawled through a river of shit and came out clean on the other side.\nhttps://cdn.discordapp.com/attachments/938728183203758082/1129104885154074704/attachment.gif"
-            )
-            channel = bot.get_channel(channel_pplofthepit)
-            await channel.send(
-                f"{user.mention} ({user}) was unpitted by {interaction.user.mention} for unknown reasons!"
-            )
-        else:
-            await interaction.response.send_message(
-                "https://cdn.discordapp.com/attachments/1239258065988222999/1261509266208981073/RDT_20240712_2224291177474633641757631.jpg?ex=6696834e&is=669531ce&hm=b441f6ee1d35f9e6e00823f493b26e7c859377ddf5a6f7c1930cb5ee7d21bcc8&.",
-                ephemeral=True,
-            )
-    except discord.Forbidden:
-        await interaction.response.send_message(
-            "403. I need to be higher in the role hiearchy.", ephemeral=True
-        )
-    except Exception as e:
-        await interaction.response.send_message(
-            f"An unexpected error occurred: {str(e)}", ephemeral=True
-        )
-
 
 @tree.command(
     name="roulette",
