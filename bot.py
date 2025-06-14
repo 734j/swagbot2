@@ -24,7 +24,7 @@ import cowfiles
 intents = discord.Intents.all()
 intents.members = True
 COMMIT = "TESTING_VERSION"
-TOKEN = "TOKEN HER "
+TOKEN = ""
 SYS_PIT_DIR_PATH = "YOUR LOG PATH"
 SYS_BADWORDS_DIR_PATH = "YOUR BAD WORDS PATH"
 bot = commands.Bot(command_prefix="(", intents=intents)
@@ -84,7 +84,10 @@ async def on_ready():
     print(f"On version: {COMMIT}")
 
     await bot.load_extension(f"cogs.pit")
-    await interaction.response.send_message(f"Cog 'pit' loaded.")
+    print(f"Cog 'pit' loaded.")
+
+    await bot.load_extension(f"cogs.neps")
+    print(f"Cog 'neps' loaded.")
 
 
 @bot.event
