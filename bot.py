@@ -320,7 +320,7 @@ async def pit(interaction: discord.Interaction, user: discord.Member, reason: st
             await user.send(f'You have been pitted in 69SwagBalls420 cord for reason: {reason}.')
             await channel.send(f"{user.mention} ({user}) was pitted by {interaction.user.mention} for reason: {reason}.")
             await pit.send (f"A loud thud shakes the depths of the Pit as {user.mention} ({user}) falls to the ground... Welcome your new friend.")
-	    elif reason == "":
+        elif reason == "":
             await generic_pit(interaction, user)
             channel = bot.get_channel(channel_pplofthepit)
             await interaction.response.send_message(f"{user.mention} has been pitted.\n{pitted_gif}")
