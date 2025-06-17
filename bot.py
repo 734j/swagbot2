@@ -24,7 +24,7 @@ import cowfiles
 intents = discord.Intents.all()
 intents.members = True
 COMMIT = "TESTING_VERSION"
-TOKEN = "TOKEN HERE"
+TOKEN = "YOUR TOKEN HERE"
 SYS_PIT_DIR_PATH = "YOUR LOG PATH"
 SYS_BADWORDS_DIR_PATH = "YOUR BAD WORDS PATH"
 bot = commands.Bot(command_prefix="(", intents=intents)
