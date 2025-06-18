@@ -1,8 +1,7 @@
 SwagBot2 is the Official bot of the 69SwagBalls420 Discord server.
 
-Required dependencies and packages:
+Required environment, dependencies and packages:
+Linux Distribution with SystemD
 python 3
 discordpy
 python-cowsay
-GNU  make (i dont even know why i use make for deploying and testing, i will have to remove this and use something that actually makes sense to use)
-
