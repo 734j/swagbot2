@@ -6,6 +6,7 @@ import json
 import os
 from datetime import datetime
 import shutil
+import sys
 
 g_run_dir_path = "run_dir_path"
 g_token_file_path = "token_file_path"
@@ -55,7 +56,6 @@ def install_bot(conf_path: str):
         os.path.expanduser(root_run_dir_path+"/old-versions"),
         os.path.expanduser(root_run_dir_path+"/pitroles")
     ]
-    print(directory_paths)
 
     for path in directory_paths:
         try:
@@ -96,16 +96,78 @@ def test_bot(conf_path: str):
         return
         
     print("OK config.")
-        
+
+def update_bot(conf_path: str):
+
+    print("Deploying update...")
+    if not is_config_valid(conf_path):
+        print("Invalid config")
+        return
+
+    print("OK config.")
+    FILEjson = open(conf_path, "r")
+    config_json = FILEjson.read()
+    config = json.loads(config_json)
+    FILEtoken = open(config[g_token_file_path])
+    root_run_dir_path = os.path.expanduser(config[g_run_dir_path]) # Path to root of the run dir
+    token_string = FILEtoken.read() # String of token
+    token_string = token_string.strip('\n')
+    
+    directory_paths = [
+        os.path.expanduser(root_run_dir_path+"/bannedwords"),
+        os.path.expanduser(root_run_dir_path+"/misc"),
+        os.path.expanduser(root_run_dir_path+"/old-versions"),
+        os.path.expanduser(root_run_dir_path+"/pitroles")
+    ]
+
+    for path in directory_paths:
+        if not os.path.isdir(path):            
+            print(f"Directory {path} does not exist. Please use --install.")
+            return False
+
+    if not os.path.isfile(root_run_dir_path+"/bot.py"):
+        print(f"bot.py does not exist, this is not an update operation. Please use --install.")
+        return False
+    
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    os.rename(root_run_dir_path+"/"+g_bot_src, directory_paths[2]+"/bot"+timestamp+".py")
+    shutil.copyfile(g_bot_src, root_run_dir_path+"/"+g_bot_src)
+    shutil.copytree("misc", root_run_dir_path+"/misc", dirs_exist_ok=True)
+
+    FILEinstalled = open(root_run_dir_path+"/"+g_bot_src, "r")
+    data = FILEinstalled.read()
+    FILEinstalled.close()
+    data = data.replace("__YOUR_TOKEN__", token_string)
+    data = data.replace("__YOUR_LOG_PATH__", directory_paths[3])
+    data = data.replace("__YOUR_BAD_WORDS_PATH__", directory_paths[0])
+    data = data.replace("__VERSION__", get_current_commit_hash())
+    FILEinstalled = open(root_run_dir_path+"/"+g_bot_src, "w")
+    FILEinstalled.write(data)
+    FILEinstalled.close()
+    print(f"Updated to commit: {get_current_commit_hash()}\nBot has been updated successfully.")
     
 
 parser = argparse.ArgumentParser(description="Bot tool")
-parser.add_argument("config_file", type=str, help="Path to the config file")
+parser.add_argument("config_file", type=str, nargs='?', help="Path to the config file (required for most operations)")
+
 group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument('--test', action='store_true', help="Run tests")
 group.add_argument('--install', action='store_true', help="Run installation")
+group.add_argument('--update', action='store_true', help="Run update")
+group.add_argument('--usage', action='store_true', help="A more in depth explanation of the options.")
 
 args = parser.parse_args()
+
+if args.usage:
+    print(f"{sys.argv[0]}\n")
+    print("     --test     Will install the bot in to a separate testing runtime directory. For your testing purposes.")
+    print("     --install     Will install the bot for the first time on your system in the way it's intended to run. Assumes you are on linux with SystemD.")
+    print("     --update     Will update already installed bot. Works almost just like --install, just that it wont ask to install the service.")
+    print("     --usage     Display this message.\n")
+    sys.exit(0)
+
+if not args.config_file:
+    parser.error("A config file is required. Please check example-config.json for an example.")
 
 conf_path = args.config_file
 
@@ -113,4 +175,5 @@ if args.test:
     test_bot(conf_path)
 elif args.install:
     install_bot(conf_path)
-
+elif args.update:
+    update_bot(conf_path)
