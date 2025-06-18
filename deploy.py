@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import subprocess
 import argparse
 import json
 import os
@@ -10,6 +11,17 @@ g_run_dir_path = "run_dir_path"
 g_token_file_path = "token_file_path"
 g_bot_src = "bot.py"
 g_bot_src_test = "bot_test.py"
+
+def get_current_commit_hash():
+    try:
+        commit_hash = subprocess.check_output(
+            ['git', 'rev-parse', 'HEAD'], 
+            stderr=subprocess.STDOUT
+        ).strip().decode('utf-8')
+        return commit_hash
+    except subprocess.CalledProcessError:
+        return None
+
 def is_config_valid(config_file: str) -> bool:
     
     FILE = open(config_file,"r")
@@ -35,7 +47,8 @@ def install_bot(conf_path: str):
     FILEtoken = open(config[g_token_file_path])
     root_run_dir_path = os.path.expanduser(config[g_run_dir_path]) # Path to root of the run dir
     token_string = FILEtoken.read() # String of token
-
+    token_string = token_string.strip('\n')
+    
     directory_paths = [
         os.path.expanduser(root_run_dir_path+"/bannedwords"),
         os.path.expanduser(root_run_dir_path+"/misc"),
@@ -64,7 +77,16 @@ def install_bot(conf_path: str):
     shutil.copyfile(g_bot_src, root_run_dir_path+"/"+g_bot_src)
     shutil.copytree("misc", root_run_dir_path+"/misc", dirs_exist_ok=True)
 
-    
+    FILEinstalled = open(root_run_dir_path+"/"+g_bot_src, "r")
+    data = FILEinstalled.read()
+    FILEinstalled.close()
+    data = data.replace("__YOUR_TOKEN__", token_string)
+    data = data.replace("__YOUR_LOG_PATH__", directory_paths[3])
+    data = data.replace("__YOUR_BAD_WORDS_PATH__", directory_paths[0])
+    data = data.replace("__VERSION__", get_current_commit_hash())
+    FILEinstalled = open(root_run_dir_path+"/"+g_bot_src, "w")
+    FILEinstalled.write(data)
+    FILEinstalled.close()
     
 def test_bot(conf_path: str):
 
