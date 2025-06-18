@@ -200,8 +200,6 @@ if args.usage:
     print(f"{sys.argv[0]}\n")
     print("     --test        Will install the bot in to a separate testing runtime directory. For your testing purposes.")
     print("     --install     Will install the bot for the first time on your system in the way it's intended to run. Assumes you are on linux with SystemD.")
-    print("                   This option requires that you run the script as root. Therefore, make sure the config file includes absolute paths")
-    print("                   and make sure it's in a path owned by your regular user, not the root user.")
     print("     --update      Will update already installed bot. Works almost just like --install, just that it wont ask to install the service.")
     print("     --usage       Display this message.\n")
     sys.exit(0)
