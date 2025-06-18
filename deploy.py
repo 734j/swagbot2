@@ -2,6 +2,9 @@
 
 import argparse
 import json
+import os
+from datetime import datetime
+import shutil
 
 g_run_dir_path = "run_dir_path"
 g_token_file_path = "token_file_path"
@@ -26,14 +29,41 @@ def install_bot(conf_path: str):
         return
 
     print("OK config.")
-    FILEjson = open(config_file, "r")
+    FILEjson = open(conf_path, "r")
     config_json = FILEjson.read()
     config = json.loads(config_json)
-    FILEtoken = open(config[g_token_dir_path])
-    root_run_dir_path = config[g_run_dir_path]
-    token_string = FILEtoken.read()
+    FILEtoken = open(config[g_token_file_path])
+    root_run_dir_path = os.path.expanduser(config[g_run_dir_path]) # Path to root of the run dir
+    token_string = FILEtoken.read() # String of token
+
+    directory_paths = [
+        os.path.expanduser(root_run_dir_path+"/bannedwords"),
+        os.path.expanduser(root_run_dir_path+"/misc"),
+        os.path.expanduser(root_run_dir_path+"/old-versions"),
+        os.path.expanduser(root_run_dir_path+"/pitroles")
+    ]
+    print(directory_paths)
+
+    for path in directory_paths:
+        try:
+            os.makedirs(path, exist_ok=True)
+            print(f"OK: {path}")
+        except PermissionError:
+            print(f"Insufficient Permission to create: {path}")
+        except OSError as e:
+            print(f"Error creating path: {path}: {e}")
+
+
+    fd = os.open(directory_paths[0]+"/list", os.O_WRONLY | os.O_CREAT)
+    os.close(fd)
+    fd2 = os.open(root_run_dir_path+"/bot.py", os.O_WRONLY | os.O_CREAT)
+    os.close(fd2)
     
-    
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    os.rename(root_run_dir_path+"/"+g_bot_src, directory_paths[2]+"/bot"+timestamp+".py")
+    shutil.copyfile(g_bot_src, root_run_dir_path+"/"+g_bot_src)
+    shutil.copytree("misc", root_run_dir_path+"/misc", dirs_exist_ok=True)
+
     
     
 def test_bot(conf_path: str):
