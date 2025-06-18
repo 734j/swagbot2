@@ -1,14 +1,14 @@
 [Unit]
-Description=Discord Bot
+Description=SwagBot2 Discord Bot
 After=network.target
 
 [Service]
-ExecStart=
-WorkingDirectory=
+ExecStart=__EXEC_START__
+WorkingDirectory=__ROOT_RUN_DIR__
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
-User=
+User=__USER__
 
 [Install]
 WantedBy=multi-user.target

@@ -7,12 +7,36 @@ import os
 from datetime import datetime
 import shutil
 import sys
+import getpass
 
 g_run_dir_path = "run_dir_path"
 g_token_file_path = "token_file_path"
 g_bot_src = "bot.py"
 g_bot_src_test = "bot_test.py"
+g_user = getpass.getuser()
 
+def ask_yes_no(question: str) -> bool:
+    while True:
+        answer = input(f"{question} [Y/N]: ").strip().lower()
+        if answer in ['y', 'yes']:
+            return True
+        elif answer in ['n', 'no']:
+            return False
+        else:
+            print("Please enter Y or N.")
+
+def install_systemd_service(root_run_dir_path: str, user: str):
+    subprocess.run(["sudo", "python3", "systemd-service-utility.py", "--install", root_run_dir_path, user], check=True)
+
+def stop_systemd_service():
+    subprocess.run(["sudo", "python3", "systemd-service-utility.py", "--stop"], check=True)
+
+def start_systemd_service():
+    subprocess.run(["sudo", "python3", "systemd-service-utility.py", "--start"], check=True)
+
+def enable_systemd_service():
+    subprocess.run(["sudo", "python3", "systemd-service-utility.py", "--enable"], check=True)
+    
 def get_current_commit_hash():
     try:
         commit_hash = subprocess.check_output(
@@ -87,6 +111,17 @@ def install_bot(conf_path: str):
     FILEinstalled = open(root_run_dir_path+"/"+g_bot_src, "w")
     FILEinstalled.write(data)
     FILEinstalled.close()
+    if ask_yes_no("Do you want to install the bot as a SystemD service?") is True:
+        install_systemd_service(root_run_dir_path, g_user)        
+        if ask_yes_no("Would you like to enable and start the service?") is True:
+            enable_systemd_service()
+            start_systemd_service()
+                
+        elif False:
+            print("There was an issue installing the SystemD service.")
+    elif False:
+        print("SystemD service not installed.")
+        
     
 def test_bot(conf_path: str):
 
@@ -145,6 +180,9 @@ def update_bot(conf_path: str):
     FILEinstalled.write(data)
     FILEinstalled.close()
     print(f"Updated to commit: {get_current_commit_hash()}\nBot has been updated successfully.")
+    if ask_yes_no("Would you like to restart the service?") is True:
+        stop_systemd_service()
+        start_systemd_service()
     
 
 parser = argparse.ArgumentParser(description="Bot tool")
@@ -160,10 +198,12 @@ args = parser.parse_args()
 
 if args.usage:
     print(f"{sys.argv[0]}\n")
-    print("     --test     Will install the bot in to a separate testing runtime directory. For your testing purposes.")
+    print("     --test        Will install the bot in to a separate testing runtime directory. For your testing purposes.")
     print("     --install     Will install the bot for the first time on your system in the way it's intended to run. Assumes you are on linux with SystemD.")
-    print("     --update     Will update already installed bot. Works almost just like --install, just that it wont ask to install the service.")
-    print("     --usage     Display this message.\n")
+    print("                   This option requires that you run the script as root. Therefore, make sure the config file includes absolute paths")
+    print("                   and make sure it's in a path owned by your regular user, not the root user.")
+    print("     --update      Will update already installed bot. Works almost just like --install, just that it wont ask to install the service.")
+    print("     --usage       Display this message.\n")
     sys.exit(0)
 
 if not args.config_file:
