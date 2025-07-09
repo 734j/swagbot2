@@ -753,12 +753,28 @@ async def loto(interaction: discord.Interaction):
 )
 async def ban_user(interaction: discord.Interaction, ban_reason: str = "", delete_message_days: int = 0, delete_message_seconds: int = 0):
 
-    user = interaction.user
-    
+    await interaction.response.send_message("This does nothing yet", ephemeral=True)
+
+@tree.command(
+    name="ban-list",
+    description="list banned users",
+    guild=discord.Object(id=server_id),
+)
+async def ban_list(interaction: discord.Interaction):
+
+    await interaction.response.send_message("This does nothing yet", ephemeral=True)
+
+@tree.command(
+    name="ban-list-file",
+    description="list banned users in a textfile",
+    guild=discord.Object(id=server_id),
+)
+async def ban_user(interaction: discord.Interaction):
+
+    await interaction.response.send_message("This does nothing yet", ephemeral=True)
     
 
 # SENATE BALLS
-
 
 @tree.command(
     name="senate-update",
