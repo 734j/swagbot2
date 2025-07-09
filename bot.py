@@ -748,7 +748,7 @@ async def loto(interaction: discord.Interaction):
 # BANNING
 @tree.command(
     name="ban",
-    description="ban a user"
+    description="ban a user",
     guild=discord.Object(id=server_id),
 )
 async def ban_user(interaction: discord.Interaction, ban_reason: str = "", delete_message_days: int = 0, delete_message_seconds: int = 0):

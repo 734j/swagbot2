@@ -231,8 +231,17 @@ group.add_argument('--test', action='store_true', help="Run tests")
 group.add_argument('--install', action='store_true', help="Run installation")
 group.add_argument('--update', action='store_true', help="Run update")
 group.add_argument('--usage', action='store_true', help="A more in depth explanation of the options.")
+group.add_argument('--stopservice', action='store_true', help="Stop service")
+group.add_argument('--startservice', action='store_true', help="Start service")
 
 args = parser.parse_args()
+
+if args.stopservice:
+    stop_systemd_service()
+    sys.exit(0)
+if args.startservice:
+    start_systemd_service()
+    sys.exit(0)
 
 if args.usage:
     print(f"{sys.argv[0]}\n")
