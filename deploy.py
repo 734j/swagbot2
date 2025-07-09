@@ -13,6 +13,7 @@ g_run_dir_path = "run_dir_path"
 g_token_file_path = "token_file_path"
 g_bot_src = "bot.py"
 g_bot_src_test = "bot_test.py"
+g_run_dir_path_test = "./test"
 g_user = getpass.getuser()
 
 def ask_yes_no(question: str) -> bool:
@@ -125,12 +126,49 @@ def install_bot(conf_path: str):
     
 def test_bot(conf_path: str):
 
-    print("Testing...")
+    print("Deploying testfile...")
     if not is_config_valid(conf_path):
         print("Invalid config")
         return
-        
+
     print("OK config.")
+    FILEjson = open(conf_path, "r")
+    config_json = FILEjson.read()
+    config = json.loads(config_json)
+    FILEtoken = open(config[g_token_file_path])
+    root_run_dir_path_test = os.path.expanduser(g_run_dir_path_test) # Path to root of the run dir
+    root_run_dir_path = os.path.expanduser(config[g_run_dir_path])
+    token_string = FILEtoken.read() # String of token
+    token_string = token_string.strip('\n')
+    
+    directory_paths = [
+        os.path.expanduser(root_run_dir_path+"/bannedwords"),
+        os.path.expanduser(root_run_dir_path+"/misc"),
+        os.path.expanduser(root_run_dir_path+"/old-versions"),
+        os.path.expanduser(root_run_dir_path+"/pitroles")
+    ]
+
+    for path in directory_paths:
+        if not os.path.isdir(path):            
+            print(f"Directory {path} does not exist. Please use --install.")
+            return False
+    
+    shutil.copyfile(g_bot_src, root_run_dir_path_test+"/"+g_bot_src_test)
+    shutil.copytree("misc", root_run_dir_path+"/misc", dirs_exist_ok=True)
+
+    FILEinstalled = open(root_run_dir_path_test+"/"+g_bot_src_test, "r")
+    data = FILEinstalled.read()
+    FILEinstalled.close()
+    data = data.replace("__YOUR_TOKEN__", token_string)
+    data = data.replace("__YOUR_LOG_PATH__", directory_paths[3])
+    data = data.replace("__YOUR_BAD_WORDS_PATH__", directory_paths[0])
+    data = data.replace("__VERSION__", get_current_commit_hash())
+    FILEinstalled = open(root_run_dir_path_test+"/"+g_bot_src_test, "w")
+    FILEinstalled.write(data)
+    FILEinstalled.close()
+    print(f"Updated to commit: {get_current_commit_hash()}\nBot moved to ./test for testing.")
+    if ask_yes_no("Would you like to stop the service to test now?") is True:
+        stop_systemd_service()
 
 def update_bot(conf_path: str):
 
@@ -144,7 +182,7 @@ def update_bot(conf_path: str):
     config_json = FILEjson.read()
     config = json.loads(config_json)
     FILEtoken = open(config[g_token_file_path])
-    root_run_dir_path = os.path.expanduser(config[g_run_dir_path]) # Path to root of the run dir
+    root_run_dir_path = os.path.expanduser(config[g_run_dir_path])
     token_string = FILEtoken.read() # String of token
     token_string = token_string.strip('\n')
     

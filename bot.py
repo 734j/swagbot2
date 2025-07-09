@@ -745,6 +745,18 @@ async def loto(interaction: discord.Interaction):
         await interaction.response.send_message("You are not eligible for the lottery!")
 
 
+# BANNING
+@tree.command(
+    name="ban",
+    description="ban a user"
+    guild=discord.Object(id=server_id),
+)
+async def ban_user(interaction: discord.Interaction, ban_reason: str = "", delete_message_days: int = 0, delete_message_seconds: int = 0):
+
+    user = interaction.user
+    
+    
+
 # SENATE BALLS
 
 
