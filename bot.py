@@ -68,7 +68,7 @@ async def on_ready():
     print(f"On version: {COMMIT}")
     with open("guilds.txt", "w", encoding="utf-8") as file:
         for guild in bot.guilds:
-            line = f"{guild.name} (ID: {guild.id})\n"
+            line = f"\n{guild.name} (ID: {guild.id})\nMember Count: {guild.approximate_member_count}\n"
             file.write(line)
             print(f"Wrote to file: {line.strip()}")
             
