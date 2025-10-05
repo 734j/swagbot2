@@ -769,7 +769,7 @@ async def ban_list(interaction: discord.Interaction):
     description="list banned users in a textfile",
     guild=discord.Object(id=server_id),
 )
-async def ban_user(interaction: discord.Interaction):
+async def ban_list_file(interaction: discord.Interaction):
 
     await interaction.response.send_message("This does nothing yet", ephemeral=True)
     
