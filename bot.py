@@ -66,7 +66,12 @@ async def on_ready():
     print(SYS_PIT_DIR_PATH)
     print(CWD_PATH)
     print(f"On version: {COMMIT}")
-
+    with open("guilds.txt", "w", encoding="utf-8") as file:
+        for guild in bot.guilds:
+            line = f"{guild.name} (ID: {guild.id})\n"
+            file.write(line)
+            print(f"Wrote to file: {line.strip()}")
+            
 
 @bot.event
 async def on_member_join(member):
@@ -161,8 +166,8 @@ async def swag(interaction: discord.Interaction, user: discord.Member):
         await interaction.response.send_message(
             f"An unexpected error occurred: {str(e)}", ephemeral=True
         )
-
-
+    
+        
 @tree.command(
     name="unswagify",
     description="unswagifies a user",
