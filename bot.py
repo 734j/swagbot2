@@ -71,6 +71,9 @@ async def on_ready():
             line = f"\n{guild.name} (ID: {guild.id})\nMember Count: {guild.member_count}\n"
             file.write(line)
             print(f"Wrote to file: {line.strip()}")
+            if guild.id != server_id:
+                print(f'Leaving guild: {guild.name} ({guild.id})')
+                await guild.leave()
 
 @bot.event
 async def on_member_join(member):
