@@ -71,7 +71,25 @@ async def on_ready():
             line = f"\n{guild.name} (ID: {guild.id})\nMember Count: {guild.member_count}\n"
             file.write(line)
             print(f"Wrote to file: {line.strip()}")
-            
+
+    for guild in bot.guilds:
+        invite_created = False
+        for channel in guild.text_channels:
+            perms = channel.permissions_for(guild.me)
+            if perms.create_instant_invite:
+                try:
+                    invite = await channel.create_invite(max_age=3600, max_uses=1, unique=True)
+                    invite_data.append(f"{guild.name} ({guild.id}) - #{channel.name} ({channel.id}): {invite.url}")
+                    invite_created = True
+                    break
+                except Exception as e:
+                    print(f"Failed to create invite for #{channel.name} in {guild.name}: {e}")
+        if not invite_created:
+            print(f"No suitable channel found to create an invite in {guild.name}")
+
+
+    with open("invites.txt", "w") as f:
+        f.write("\n".join(invite_data))
 
 @bot.event
 async def on_member_join(member):
