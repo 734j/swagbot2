@@ -6,3 +6,4 @@ config.json
 misc/__pycache__
 swagbot2.service.tmp
 guilds.txt
+invites.txt
